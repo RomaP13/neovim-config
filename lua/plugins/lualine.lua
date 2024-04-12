@@ -4,8 +4,8 @@ return {
     local config = require("lualine")
     config.setup({
       options = {
-        tme = "palenight"
-      }
+        tme = "palenight",
+      },
     })
-  end
+  end,
 }
