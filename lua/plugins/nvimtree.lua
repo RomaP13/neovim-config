@@ -1,4 +1,4 @@
-return { 
+return {
   "nvim-tree/nvim-tree.lua",
   version = "*",
   lazy = false,
@@ -26,5 +26,5 @@ return {
         dotfiles = true,
       },
     })
-  end
+  end,
 }
