@@ -3,11 +3,15 @@ return {
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "nvim-neotest/nvim-nio",
+    "mfussenegger/nvim-dap-python",
   },
   config = function()
     local dap = require("dap")
     local dapui = require("dapui")
     dapui.setup()
+
+    local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
+    require("dap-python").setup(path)
 
     dap.adapters.codelldb = {
       type = "server",

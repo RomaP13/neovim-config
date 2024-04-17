@@ -20,6 +20,13 @@ return {
           "clangd",
           "clang-format",
           "codelldb",
+
+          -- python stuff
+          "python-lsp-server",
+          "mypy",
+          "isort",
+          "black",
+          "debugpy",
         },
       })
     end,
@@ -41,6 +48,9 @@ return {
         capabilities = capabilities,
       })
       lspconfig.clangd.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.pylsp.setup({
         capabilities = capabilities,
       })
 

@@ -6,12 +6,20 @@ return {
 
     null_ls.setup({
       sources = {
+        -- lua stuff
         null_ls.builtins.formatting.stylua.with({
           condition = function(utils)
             return utils.root_has_file({ "stylua.toml", ".stylua.toml" })
           end,
-          null_ls.builtins.formatting.clang_format,
         }),
+
+        -- c stuff
+        null_ls.builtins.formatting.clang_format,
+
+        -- python stuff
+        null_ls.builtins.formatting.isort,
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.diagnostics.mypy,
       },
       on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then
