@@ -11,6 +11,7 @@ return {
         "vimdoc",
         "python",
         "c",
+        "bash",
       },
 
       highlight = {
