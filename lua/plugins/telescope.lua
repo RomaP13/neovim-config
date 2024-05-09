@@ -37,6 +37,7 @@ return {
       map("n", "<leader>fb", builtin.buffers, {})
       map("n", "<leader>fh", builtin.help_tags, {})
       map("n", "<leader>fw", builtin.grep_string, {})
+      map("n", "<leader>fr", builtin.resume, {})
       map("n", "<leader>gt", builtin.git_status, {})
       map("n", "<leader>gc", builtin.git_commits, {})
 
