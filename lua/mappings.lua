@@ -43,3 +43,12 @@ map(
 vim.api.nvim_set_keymap("v", "<C-r>", ":%s/<C-r>h//g<CR>", {})
 
 map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", {})
+
+map("n", "<C-q>", "<cmd>wq<CR>", {})
+
+-- Snippets
+local opts = { noremap = true, silent = true }
+map("i", "<C-w>", "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
+map("s", "<C-w>", "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
+map("i", "<C-s>", "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
+map("s", "<C-s>", "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)

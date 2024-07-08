@@ -41,7 +41,7 @@ return {
       map("n", "<leader>gt", builtin.git_status, {})
       map("n", "<leader>gc", builtin.git_commits, {})
 
-      map("n", "<leader>u", "<cmd>Telescope undo<cr>", { desc = "Undo history" })
+      -- map("n", "<leader>u", "<cmd>Telescope undo<cr>", { desc = "Undo history" })
       map("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
     end,
   },
