@@ -1,8 +1,6 @@
 {
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
   "catppuccin": { "branch": "main", "commit": "e1268d1c0351aa5a42ea00a680ce84de2ba080fc" },
-  "coc-prettier": { "branch": "master", "commit": "b0f67a8685cf71b3d1acb6c78da148fc8caa960f" },
-  "coc-pyright": { "branch": "master", "commit": "e234bd6f6cb44b9681021093d4518524083326bb" },
   "coc.nvim": { "branch": "release", "commit": "ae1a5576936f78ae46a51964db1b2293b40ff27f" },
   "lazy.nvim": { "branch": "main", "commit": "077102c5bfc578693f12377846d427f49bc50076" },
   "lualine.nvim": { "branch": "master", "commit": "544dd1583f9bb27b393f598475c89809c4d5e86b" },
