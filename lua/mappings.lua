@@ -23,10 +23,9 @@ map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic messa
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
+-- Move line in the visual mode
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
-
-map("x", "<leader>p", '"_dP')
 
 -- Comment
 map("n", "<leader>/", function()
@@ -44,7 +43,7 @@ vim.api.nvim_set_keymap("v", "<C-r>", ":%s/<C-r>h//g<CR>", {})
 
 map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", {})
 
-map("n", "<C-q>", "<cmd>wq<CR>", {})
+map("n", "<C-q>", "<cmd>q<CR>", {})
 
 -- Snippets
 local opts = { noremap = true, silent = true }
@@ -52,3 +51,16 @@ map("i", "<C-w>", "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
 map("s", "<C-w>", "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
 map("i", "<C-s>", "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
 map("s", "<C-s>", "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
+
+-- Yanking
+map("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
+map("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
+
+map("n", "<leader>p", '"+p', { desc = "Paste after cursor from clipboard" })
+map("n", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
+map("v", "<leader>p", '"+p', { desc = "Paste after cursor from clipboard" })
+map("v", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
+
+
+map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
+map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
