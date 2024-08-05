@@ -1,5 +1,8 @@
 local map = vim.keymap.set
 
+-- Delete a word by pressing Ctrl + Backspace
+vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', {noremap = true})
+
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "File Save" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "File Copy whole" })
 map("n", "<C-u>", "<cmd>source<CR>", { desc = "Souce File" })
