@@ -45,11 +45,4 @@ return {
       map("n", "<leader>or", "<cmd>OR<CR>", {})
     end,
   },
-  {
-    "fannheyward/coc-pyright",
-  },
-  {
-    "neoclide/coc-prettier",
-    build = "yarn install --frozen-lockfile"
-  },
 }

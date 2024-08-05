@@ -38,3 +38,23 @@ vim.g.have_nerd_font = true
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+
+-- Coc extensions
+vim.g.coc_global_extensions = {
+  -- Languages
+  "coc-pyright",
+  "coc-sumneko-lua",
+  "coc-clangd",
+
+  -- Front-End stuff
+  "coc-html",
+  "coc-htmldjango",
+  "coc-css",
+
+  -- Other stuff
+  "coc-json",
+  "coc-docker",
+}
+
+-- Window layout for undotree
+vim.g.undotree_WindowLayout = 4
