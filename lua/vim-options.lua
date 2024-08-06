@@ -41,6 +41,7 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Coc extensions
 vim.g.coc_global_extensions = {
+  "coc-snippets",
   -- Languages
   "coc-pyright",
   "coc-sumneko-lua",
@@ -58,3 +59,10 @@ vim.g.coc_global_extensions = {
 
 -- Window layout for undotree
 vim.g.undotree_WindowLayout = 4
+
+-- Snippets
+-- Use <C-w> for jump to next placeholder
+vim.g.coc_snippet_next = '<c-w>'
+
+-- Use <C-s> for jump to previous placeholder
+vim.g.coc_snippet_prev = '<c-s>'

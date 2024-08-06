@@ -48,13 +48,6 @@ map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", {})
 
 map("n", "<C-q>", "<cmd>q<CR>", {})
 
--- Snippets
-local opts = { noremap = true, silent = true }
-map("i", "<C-w>", "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
-map("s", "<C-w>", "<cmd>lua require'luasnip'.jump(1)<CR>", opts)
-map("i", "<C-s>", "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
-map("s", "<C-s>", "<cmd>lua require'luasnip'.jump(-1)<CR>", opts)
-
 -- Yanking
 map("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 map("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
