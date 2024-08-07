@@ -20,6 +20,11 @@ return {
             require("telescope.themes").get_dropdown({}),
           },
         },
+        pickers = {
+          colorscheme = {
+            enable_preview = true
+          }
+        }
       })
 
       -- load extensions

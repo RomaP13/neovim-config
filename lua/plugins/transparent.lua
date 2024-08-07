@@ -1,6 +1,7 @@
 return {
   "xiyaowong/transparent.nvim",
-  config = function ()
+  enabled = false,
+  config = function()
     local config = require("transparent")
     config.setup({
       groups = {
@@ -11,7 +12,7 @@ return {
         "EndOfBuffer",
       },
       extra_groups = {
-        "NormalFloat", -- plugins which have float panel such as Lazy, Mason, LspInfo
+        "NormalFloat",   -- plugins which have float panel such as Lazy, Mason, LspInfo
         "NvimTreeNormal" -- NvimTree
       },
     })
