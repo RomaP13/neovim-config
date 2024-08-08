@@ -2,6 +2,62 @@
   // coc
   "coc.preferences.willSaveHandlerTimeout": 1000,
   "coc.preferences.formatOnSave": true,
+  
+  "suggest.completionItemKindLabels": {
+    "text": "󰉿 text",
+    "method": "󰆧 method",
+    "function": "󰊕 function",
+    "constructor": " constructor",
+    "field": "󰜢 field",
+    "variable": "󰀫 variable",
+    "class": "󰠱 class",
+    "interface": " interface",
+    "module": " module",
+    "property": "󰜢 property",
+    "unit": "󰑭 unit",
+    "value": "󰎠 value",
+    "enum": " enum",
+    "keyword": "󰌋 keyword",
+    "snippet": " snippet",
+    "color": "󰏘 color",
+    "file": "󰈙 file",
+    "reference": "󰈇 reference",
+    "folder": "󰉋 folder",
+    "enumMember": " enumMember",
+    "constant": "󰏿 constant",
+    "struct": "󰙅 struct",
+    "event": " event",
+    "operator": "󰆕 operator",
+    "default": " default",
+    "typeParameter": " typeParameter"
+  },
+  "suggest.floatConfig": {
+    "border": true,
+    "rounded": false,
+    "winblend": 0,
+    "shadow": false
+  },
+
+  "diagnostic.floatConfig": {
+    "border": true,
+    "rounded": false,
+    "winblend": 0,
+    "shadow": false
+  },
+
+  "hover.floatConfig": {
+    "border": true,
+    "rounded": false,
+    "winblend": 0,
+    "shadow": false
+  },
+
+  "signature.floatConfig": {
+    "border": true,
+    "rounded": false,
+    "winblend": 0,
+    "shadow": false
+  },
 
   // black
   "python.formatting.provider": "black",
@@ -23,5 +79,9 @@
   "python.linting.enabled": true,
 
   // json
+  "json.enable": true,
   "json.format.enable": false,
+
+  // snippets
+  "snippets.ultisnips.pythonPrompt": false
 }
