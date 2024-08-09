@@ -13,8 +13,21 @@ return {
         return {
           LineNr = { fg = colors.rosewater },
           CursorLineNr = { fg = colors.green },
+          Comment = { fg = "#808A9F" },
         }
       end,
+
+      integrations = {
+        coc_nvim = true,
+        gitsigns = true,
+        dap = true,
+        dap_ui = true,
+        nvimtree = true,
+        treesitter = true,
+        telescope = {
+          enabled = true,
+        },
+      }
 
     })
 
