@@ -4,7 +4,7 @@ return {
     local config = require("lualine")
     config.setup({
       options = {
-        tme = "palenight",
+        theme = "catppuccin",
       },
     })
   end,
