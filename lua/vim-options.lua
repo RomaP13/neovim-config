@@ -21,7 +21,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = "yes"
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 700
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
@@ -32,6 +32,9 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.opt.scrolloff = 20
+
+-- Highlight the text line of the cursor
+vim.opt.cursorline = true
 
 vim.g.have_nerd_font = true
 
