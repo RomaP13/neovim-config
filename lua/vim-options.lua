@@ -36,6 +36,9 @@ vim.opt.scrolloff = 20
 -- Highlight the text line of the cursor
 vim.opt.cursorline = true
 
+-- Enable 24-bit color
+vim.opt.termguicolors = true
+
 vim.g.have_nerd_font = true
 
 -- disable netrw at the very start of your init.lua
