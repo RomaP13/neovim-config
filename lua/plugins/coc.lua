@@ -43,6 +43,18 @@ return {
         desc = "Highlight symbol under cursor on CursorHold"
       })
 
+      -- Remap <C-f> and <C-b> to scroll float windows/popups
+      ---@diagnostic disable-next-line: redefined-local
+      local opts = { silent = true, nowait = true, expr = true }
+      map("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+      map("n", "<C-g>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+      map("i", "<C-f>",
+        'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
+      map("i", "<C-g>",
+        'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
+      map("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+      map("v", "<C-g>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+
       map("n", "K", '<CMD>lua _G.show_docs()<CR>', { silent = true })
 
       -- Symbol renaming
