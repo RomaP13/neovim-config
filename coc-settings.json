@@ -59,6 +59,9 @@
     "shadow": false
   },
 
+  // python
+  "python.venvPath": "/home/roman/.local/share/virtualenvs",
+
   // black
   "python.formatting.provider": "black",
   "python.formatting.blackPath": "~/.local/bin/black",
