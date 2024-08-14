@@ -23,6 +23,8 @@ return {
         dap = true,
         dap_ui = true,
         nvimtree = true,
+        noice = true,
+        notify = true,
         treesitter = true,
         telescope = {
           enabled = true,
