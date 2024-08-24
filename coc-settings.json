@@ -85,6 +85,9 @@
   "json.enable": true,
   "json.format.enable": false,
 
+  // css
+  "css.format.spaceAroundSelectorSeparator": true,
+
   // snippets
   "snippets.ultisnips.pythonPrompt": false
 }
