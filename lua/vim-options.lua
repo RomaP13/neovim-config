@@ -56,7 +56,11 @@ vim.g.coc_global_extensions = {
   -- Front-End stuff
   "coc-html",
   "coc-htmldjango",
+  "coc-htmlhint",
+  "coc-html-css-support",
   "coc-css",
+  "coc-tsserver",
+  "coc-emmet",
 
   -- Other stuff
   "coc-json",
