@@ -5,13 +5,36 @@ return {
     local config = require("nvim-treesitter.configs")
     config.setup({
       ensure_installed = {
+        -- Lua stuff
         "lua",
         "luadoc",
+
+        -- Vim stuff
         "vim",
         "vimdoc",
-        "python",
-        "c",
+
+        -- Programming languages
         "bash",
+        "c",
+        "python",
+        "javascript",
+        "typescript",
+
+        -- Makrup and documentation
+        "markdown",
+        "markdown_inline",
+        "json",
+        "yaml",
+
+        -- Web development
+        "css",
+        "html",
+        "htmldjango",
+
+        -- Other stuff
+        "dockerfile",
+        "make",
+        "query",
       },
 
       highlight = {
