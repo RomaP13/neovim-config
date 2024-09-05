@@ -76,3 +76,6 @@ vim.g.coc_snippet_next = '<c-w>'
 
 -- Use <C-s> for jump to previous placeholder
 vim.g.coc_snippet_prev = '<c-s>'
+
+vim.g.foldmethod = "manual"
+vim.g.foldcolumn = 1
