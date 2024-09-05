@@ -3,6 +3,9 @@ return {
     "honza/vim-snippets"
   },
   {
+    "mlaursen/vim-react-snippets"
+  },
+  {
     "neoclide/coc.nvim",
     branch = "release",
     config = function()
@@ -69,6 +72,9 @@ return {
       -- Add `:OR` command for organize imports of the current buffer
       vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
       map("n", "<leader>or", "<cmd>OR<CR>", {})
+
+      -- Show all diagnostics
+      map("n", "<leader>a", ":<C-u>CocList --normal diagnostics<cr>", { silent = true, nowait = true })
     end,
   },
 }
