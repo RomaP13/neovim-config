@@ -1,6 +1,7 @@
 local map = vim.keymap.set
 
 -- Delete a word by pressing Ctrl + Backspace
+-- FIX: Keymap doesn't work
 vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
 
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "File Save" })
@@ -12,6 +13,8 @@ map("i", "jk", "<Esc>")
 map("i", "<C-h>", "<Left>")
 map("i", "<C-l>", "<Right>")
 map("i", "<C-j>", "<Down>")
+
+
 map("i", "<C-k>", "<Up>")
 
 map("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
@@ -26,8 +29,8 @@ map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rr
 map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Move line in the visual mode
-map("v", "J", ":m '>+1<CR>gv=gv")
-map("v", "K", ":m '<-2<CR>gv=gv")
+map("v", "J", ":m '>+1<CR>gv=gv", { silent = true })
+map("v", "K", ":m '<-2<CR>gv=gv", { silent = true })
 
 -- Comment
 map("n", "<leader>/", function()
