@@ -14,6 +14,8 @@ map("i", "<C-h>", "<Left>")
 map("i", "<C-l>", "<Right>")
 map("i", "<C-j>", "<Down>")
 
+map("n", "<C-a>", ":bprev<CR>", { noremap = true, silent = true })
+map("n", "<C-d>", ":bnext<CR>", { noremap = true, silent = true })
 
 map("i", "<C-k>", "<Up>")
 
