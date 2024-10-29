@@ -5,7 +5,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-ui-select.nvim",
-      "debugloop/telescope-undo.nvim",
       "nvim-telescope/telescope-live-grep-args.nvim",
     },
     config = function()
@@ -30,7 +29,6 @@ return {
       -- load extensions
       local extensions_list = {
         "ui-select",
-        "undo",
         "live_grep_args",
       }
       for _, ext in ipairs(extensions_list) do
@@ -46,7 +44,6 @@ return {
       map("n", "<leader>gt", builtin.git_status, {})
       map("n", "<leader>gc", builtin.git_commits, {})
 
-      -- map("n", "<leader>u", "<cmd>Telescope undo<cr>", { desc = "Undo history" })
       map("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
     end,
   },
