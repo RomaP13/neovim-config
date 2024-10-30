@@ -7,7 +7,15 @@ return {
   },
   config = function()
     local config = require("noice")
-    config.setup()
+    config.setup({
+      cmdline = {
+        format = {
+          filter = false,
+          lua = false,
+          help = false
+        }
+      }
+    })
 
     local map = vim.keymap.set
 
