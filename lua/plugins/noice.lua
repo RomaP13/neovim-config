@@ -23,6 +23,6 @@ return {
     map("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noice Messages" })
 
     -- Open Noice Messages in Telescope
-    map("n", "<leader>nt", "<cmd>NoiceTelescope<CR>", { desc = "Open Noice Messages in Telescope" })
+    -- map("n", "<leader>nt", "<cmd>NoiceTelescope<CR>", { desc = "Open Noice Messages in Telescope" })
   end
 }

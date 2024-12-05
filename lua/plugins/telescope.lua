@@ -11,8 +11,8 @@ return {
       local map = vim.keymap.set
 
       local config = require("telescope")
-      local builtin = require("telescope.builtin")
       local action_state = require("telescope.actions.state")
+      local builtin = require("telescope.builtin")
 
       config.setup({
         extensions = {
@@ -44,6 +44,7 @@ return {
       map("n", "<leader>gt", builtin.git_status, { silent = true })
       map("n", "<leader>gc", builtin.git_commits, { silent = true })
 
+      map("n", "<leader>nt", ":lua require('telescope').extensions.notify.notify()<CR>", { silent = true, desc = "Open Messages in Telescope" })
       map("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", { silent = true })
 
       -- Open buffers with Telescope. Press Ctrl-r to delete buffer from the list
