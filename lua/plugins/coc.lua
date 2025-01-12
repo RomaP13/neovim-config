@@ -65,6 +65,10 @@ return {
 
       map("i", "<CR>", "coc#pum#visible() ? '\\<C-y>' : '\\<CR>'", { silent = true, expr = true })
 
+      -- Formatting selected code
+      map("x", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+      map("n", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+
       -- Add `:Format` command to format current buffer
       vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
       map("n", "<leader>fm", "<cmd>Format<CR>", {})
