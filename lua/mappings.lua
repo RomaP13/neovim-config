@@ -1,10 +1,11 @@
 local map = vim.keymap.set
 
 -- Delete a word by pressing Ctrl + Backspace
--- FIX: Keymap doesn't work
-vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
+map("i", "<C-BS>", "<C-w>")
+map("c", "<C-BS>", "<C-w>")
+map("i", "<C-H>", "<C-w>")
+map("c", "<C-H>", "<C-w>")
 
-map("n", "<C-s>", "<cmd>w<CR>", { desc = "File Save" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "File Copy whole" })
 
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
