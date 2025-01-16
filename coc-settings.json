@@ -67,6 +67,7 @@
 
   // isort
   "python.sortImports.path": "~/.local/bin/isort",
+  "python.sortImports.args": ["--src=${workspaceFolder}"],
   "pyright.organizeimports.provider": "isort",
   
 
