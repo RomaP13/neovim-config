@@ -35,18 +35,6 @@ map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]ui
 map("v", "J", ":m '>+1<CR>gv=gv", { silent = true })
 map("v", "K", ":m '<-2<CR>gv=gv", { silent = true })
 
--- Comment
-map("n", "<leader>/", function()
-  require("Comment.api").toggle.linewise.current()
-end, { desc = "Comment Toggle" })
-
-map(
-  "v",
-  "<leader>/",
-  "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-  { desc = "Comment Toggle" }
-)
-
 vim.api.nvim_set_keymap("v", "<C-r>", ":%s/<C-r>h//g<CR>", {})
 
 map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", {})
