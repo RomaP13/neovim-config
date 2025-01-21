@@ -79,6 +79,9 @@ return {
 
       -- Show all diagnostics
       map("n", "<leader>a", ":<C-u>CocList --normal diagnostics<cr>", { silent = true, nowait = true })
+
+      -- Restart server
+      map("n", "<leader>cr", ":CocRestart<CR>", { silent = true })
     end,
   },
 }
