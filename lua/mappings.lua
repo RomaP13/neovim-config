@@ -1,4 +1,3 @@
-local text_utils = require("utils.text_utils")
 local map = vim.keymap.set
 
 -- Delete a word by pressing Ctrl + Backspace
@@ -56,4 +55,10 @@ map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
 map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
 
 -- Join selected paragraphs and copy them to the clipboard
-map("v", "<leader>jp", text_utils.join_paragraphs, { noremap = true, silent = true })
+map("v", "<leader>jp", ":lua require('utils.text_utils').join_paragraphs()<CR>", { noremap = true, silent = true })
+
+-- Notes:
+-- Directly calling require('utils.text_utils').join_paragraphs() caused inconsistent behavior,
+-- particularly with visual selections not being handled correctly. Using <cmd>lua also led to
+-- similar issues, likely due to differences in how visual mode transitions are handled.
+-- To ensure reliable behavior, we use :lua to call the function in command-line mode.
