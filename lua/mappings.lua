@@ -6,20 +6,32 @@ map("c", "<C-BS>", "<C-w>")
 map("i", "<C-H>", "<C-w>")
 map("c", "<C-H>", "<C-w>")
 
+-- Save file forcefully even when 'readonly' is set or
+-- there is another reason why writing was refused.
+map("n", "<C-s>", "<cmd>w!<CR>", { desc = "File Save" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "File Copy whole" })
 
+-- Remove search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+-- Go to normal mode
 map("i", "jk", "<Esc>")
 
+-- Quick movement in insert mode
+map("i", "<C-k>", "<Up>")
 map("i", "<C-h>", "<Left>")
 map("i", "<C-l>", "<Right>")
 map("i", "<C-j>", "<Down>")
 
+-- Buffer navigation
 map("n", "<C-a>", ":bprev<CR>", { noremap = true, silent = true })
 map("n", "<C-d>", ":bnext<CR>", { noremap = true, silent = true })
 
-map("i", "<C-k>", "<Up>")
+-- Buffer unloading
+-- TODO: Think about the better way of managing buffers
+map("n", "<leader>bd", ":bd | bprev<CR>", { silent = true, desc = "Unload buffer and delete it from the buffer list" })
 
+-- Window navigation
 map("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 map("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 map("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
@@ -28,6 +40,8 @@ map("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 -- Diagnostic keymaps
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
+
+-- TODO: remove mappings? The first one is useless and the last one doesn't work
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
@@ -35,22 +49,20 @@ map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]ui
 map("v", "J", ":m '>+1<CR>gv=gv", { silent = true })
 map("v", "K", ":m '<-2<CR>gv=gv", { silent = true })
 
-vim.api.nvim_set_keymap("v", "<C-r>", ":%s/<C-r>h//g<CR>", {})
+-- Replace all single quotes(') with double(")
+map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", { silent = true })
 
-map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", {})
-
-map("n", "<C-q>", "<cmd>q<CR>", {})
-
--- Yanking
+-- Yanking to the system clipboard
 map("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 map("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 
+-- Pasting from the system clipboard
 map("n", "<leader>p", '"+p', { desc = "Paste after cursor from clipboard" })
 map("n", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
 map("v", "<leader>p", '"+p', { desc = "Paste after cursor from clipboard" })
 map("v", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
 
-
+-- Deleting without yanking
 map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
 map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
 
