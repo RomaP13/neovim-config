@@ -65,11 +65,22 @@
   "python.venvPath": "/home/roman/.local/share/virtualenvs",
   "pyright.enable": true,
 
+  //disable pyright type checker
+  "pyright.disableDiagnostics": true,
+  "python.analysis.typeCheckingMode": "off",
+  
   // isort
   "python.sortImports.path": "~/.local/bin/isort",
   "python.sortImports.args": ["--src=${workspaceFolder}"],
   "pyright.organizeimports.provider": "isort",
-  
+
+  // mypy
+  "python.linting.mypyEnabled": true,
+  "python.linting.mypyPath": "~/.local/bin/mypy",
+
+  // ruff
+  "python.linting.ruffEnabled": true,
+  "python.linting.ruffPath": "~/.local/bin/ruff",
 
   // black
   "python.formatting.provider": "black",
@@ -78,12 +89,6 @@
     "--line-length",
     "80"
   ],
-
-  // flake8
-  "python.linting.flake8Enabled": true,
-  "python.linting.flake8Path": "~/.local/bin/flake8",
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false,
 
   // json
   "json.enable": true,
@@ -102,4 +107,6 @@
   "javascript.format.semicolons": "insert",
 
   "Lua.format.enable": true,
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": false
 }
