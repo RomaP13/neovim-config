@@ -50,7 +50,7 @@ vim.g.coc_global_extensions = {
   "coc-snippets",
   -- Languages
   "coc-pyright",
-  "coc-sumneko-lua",
+  "coc-lua",
   "coc-clangd",
 
   -- Front-End stuff
@@ -61,6 +61,8 @@ vim.g.coc_global_extensions = {
   "coc-css",
   "coc-tsserver",
   "coc-emmet",
+
+  -- TODO: Find out about coc lua. Format doesn't work. or works??? --
 
   -- Other stuff
   "coc-json",
