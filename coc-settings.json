@@ -97,11 +97,9 @@
 
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
+  "javascript.preferences.quoteStyle": "double",
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
   "javascript.format.semicolons": "insert",
-
-  "java.jdt.ls.java.home": "/usr/lib/jvm/java-17-openjdk-amd64",
-  "java.jdt.ls.vmargs": "-Xmx2G -Xms100m",
 
   "Lua.format.enable": true,
 }
