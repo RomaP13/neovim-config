@@ -34,32 +34,32 @@ local function should_format()
 end
 
 -- Python: Sort imports and format code on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group    = "CocGroup",
-  pattern  = "*.py",
-  callback = function()
-    if should_format() then
-      -- Sort imports
-      fn.CocAction("runCommand", "editor.action.organizeImport")
-      -- Format code
-      fn.CocAction("format")
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   group    = "CocGroup",
+--   pattern  = "*.py",
+--   callback = function()
+--     if should_format() then
+--       -- Sort imports
+--       fn.CocAction("runCommand", "editor.action.organizeImport")
+--       -- Format code
+--       fn.CocAction("format")
+--     end
+--   end,
+-- })
 
 -- JavaScript/TypeScript: Sort imports and format code on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group    = "CocGroup",
-  pattern  = { "*.js", "*.jsx", "*.ts", "*.tsx" },
-  callback = function()
-    if should_format() then
-      -- Sort imports
-      fn.CocAction("runCommand", "editor.action.organizeImport")
-      -- Format code
-      fn.CocAction("format")
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   group    = "CocGroup",
+--   pattern  = { "*.js", "*.jsx", "*.ts", "*.tsx" },
+--   callback = function()
+--     if should_format() then
+--       -- Sort imports
+--       fn.CocAction("runCommand", "editor.action.organizeImport")
+--       -- Format code
+--       fn.CocAction("format")
+--     end
+--   end,
+-- })
 
 -- Add commands to toggle formatting
 vim.api.nvim_create_user_command("ToggleFormatOnSave", function()
