@@ -15,23 +15,22 @@ return {
           help = false
         }
       },
+      presets = {
+        long_message_to_split = true,
+        lsp_doc_border = true,  -- Ensures borders for hover and signature help
+      },
       lsp = {
         signature = {
-          enabled = true,
+          enabled = false,
           auto_open = {
-            enabled = true,
-            trigger = true,
-            luasnip = true,
-            throttle = 100,
+            enabled = false,
+            trigger = false, -- Automatically show signature help when typing a trigger character
+            luasnip = false, -- Enable with luasnip
           },
-          view = "hover",  -- Ensure it uses hover view with borders
         },
         hover = {
-          enabled = true,  -- Enable Noice's hover UI
-        },
-      },
-      presets = {
-        lsp_doc_border = true,  -- Ensures borders for hover and signature help
+          enabled = false,
+        }
       },
     })
 
@@ -39,8 +38,5 @@ return {
 
     -- Dismiss Noice Messages
     map("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noice Messages" })
-
-    -- Open Noice Messages in Telescope
-    -- map("n", "<leader>nt", "<cmd>NoiceTelescope<CR>", { desc = "Open Noice Messages in Telescope" })
   end
 }

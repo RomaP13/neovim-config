@@ -16,66 +16,68 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
       local lspconfig = require("lspconfig")
       local map = vim.keymap.set
 
-      local _border = "rounded"
-
-      -- Add the border on hover and on signature help popup window
-      local handlers = {
-          ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = _border }),
-          ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = _border }),
+      -- Define a border style
+      local border = {
+        { "╭", "FloatBorder" },
+        { "─", "FloatBorder" },
+        { "╮", "FloatBorder" },
+        { "│", "FloatBorder" },
+        { "╯", "FloatBorder" },
+        { "─", "FloatBorder" },
+        { "╰", "FloatBorder" },
+        { "│", "FloatBorder" }
       }
 
-      vim.diagnostic.config{
-        float={ border=_border }
-      }
+      -- Override the default hover handler
+      local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+      function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.border = opts.border or border
+        return orig_util_open_floating_preview(contents, syntax, opts, ...)
+      end
 
-      -- vim.api.nvim_create_autocmd("CursorHoldI", {
-      --   pattern = "*",
-      --   callback = function()
-      --     vim.lsp.buf.signature_help()
-      --   end,
-      -- })
+      vim.diagnostic.config {
+        float = { border = "rounded" }
+      }
 
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
-        handlers = handlers,
+        on_init = function(client)
+          if client.workspace_folders then
+            local path = client.workspace_folders[1].name
+            if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+              return
+            end
+          end
+
+          client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+            runtime = {
+              version = 'LuaJIT'
+            },
+            -- Make the server aware of Neovim runtime files
+            workspace = {
+              checkThirdParty = false,
+              library = {
+                vim.env.VIMRUNTIME
+              }
+            }
+          })
+        end,
+        settings = {
+          Lua = {}
+        }
       })
+
       lspconfig.clangd.setup({
         capabilities = capabilities,
       })
-      -- lspconfig.pylsp.setup({
-      --   settings = {
-      --     pylsp = {
-      --       plugins = {
-      --         -- formatter options
-      --         black = { enabled = true },
-      --         autopep8 = { enabled = false },
-      --         yapf = { enabled = false },
-      --         -- linter options
-      --         pylint = { enabled = true, executable = "pylint" },
-      --         pyflakes = { enabled = false },
-      --         pycodestyle = { enabled = false },
-      --         -- type checker
-      --         pylsp_mypy = { enabled = true },
-      --         -- auto-completion options
-      --         jedi_completion = { fuzzy = true },
-      --         -- import sorting
-      --         pyls_isort = { enabled = true },
-      --       },
-      --     },
-      --   },
-      --   capabilities = capabilities,
-      -- })
-      -- lspconfig.bashls.setup({
-      --   capabilities = capabilities,
-      -- })
 
       lspconfig.pyright.setup({
         capabilities = capabilities,
-        handlers = handlers,
         filetypes = { "python" },
         settings = {
           python = {
@@ -98,7 +100,7 @@ return {
       map("n", "<leader>of", vim.diagnostic.open_float, {})
       map("n", "[d", vim.diagnostic.goto_prev, {})
       map("n", "]d", vim.diagnostic.goto_next, {})
-      map("i", "<C-b>", vim.lsp.buf.signature_help, {buffer=true})
+      -- map("i", "<C-s>", vim.lsp.buf.signature_help, { buffer = true })
     end,
   },
 }
