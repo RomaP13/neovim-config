@@ -29,7 +29,7 @@ return {
         { "╯", "FloatBorder" },
         { "─", "FloatBorder" },
         { "╰", "FloatBorder" },
-        { "│", "FloatBorder" }
+        { "│", "FloatBorder" },
       }
 
       -- Override the default hover handler
@@ -40,36 +40,39 @@ return {
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
 
-      vim.diagnostic.config {
-        float = { border = "rounded" }
-      }
+      vim.diagnostic.config({
+        float = { border = "rounded" },
+      })
 
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         on_init = function(client)
           if client.workspace_folders then
             local path = client.workspace_folders[1].name
-            if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+            if
+              path ~= vim.fn.stdpath("config")
+              and (vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc"))
+            then
               return
             end
           end
 
-          client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+          client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
             runtime = {
-              version = 'LuaJIT'
+              version = "LuaJIT",
             },
             -- Make the server aware of Neovim runtime files
             workspace = {
               checkThirdParty = false,
               library = {
-                vim.env.VIMRUNTIME
-              }
-            }
+                vim.env.VIMRUNTIME,
+              },
+            },
           })
         end,
         settings = {
-          Lua = {}
-        }
+          Lua = {},
+        },
       })
 
       lspconfig.clangd.setup({
@@ -80,14 +83,36 @@ return {
         capabilities = capabilities,
         filetypes = { "python" },
         settings = {
+          pyright = {
+            disableOrganizeimports = true,
+            disableFormatting = true,
+          },
           python = {
             pythonPath = vim.fn.systemlist("poetry env info --path")[1] .. "/bin/python",
-          }
-        }
+          },
+        },
       })
+
+      -- Configure Ruff
       lspconfig.ruff.setup({
         capabilities = capabilities,
         filetypes = { "python" },
+      })
+
+      -- Disable Ruff's hover in favor of Pyright
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client == nil then
+            return
+          end
+          if client.name == "ruff" then
+            -- Disable hover in favor of Pyright
+            client.server_capabilities.hoverProvider = false
+          end
+        end,
+        desc = "LSP: Disable hover capability from Ruff",
       })
 
       map("n", "K", vim.lsp.buf.hover, {})
@@ -100,7 +125,6 @@ return {
       map("n", "<leader>of", vim.diagnostic.open_float, {})
       map("n", "[d", vim.diagnostic.goto_prev, {})
       map("n", "]d", vim.diagnostic.goto_next, {})
-      -- map("i", "<C-s>", vim.lsp.buf.signature_help, { buffer = true })
     end,
   },
 }

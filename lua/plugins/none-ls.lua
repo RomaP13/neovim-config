@@ -1,49 +1,46 @@
 return {
   "nvimtools/none-ls.nvim",
+  dependencies = {
+    "nvimtools/none-ls-extras.nvim",
+    "jayp0521/mason-null-ls.nvim",
+  },
   config = function()
-    -- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+    local mason_null_ls = require("mason-null-ls")
     local null_ls = require("null-ls")
 
+    local ruff = require("none-ls.formatting.ruff")
+    local ruff_format = require("none-ls.formatting.ruff_format")
+
+    mason_null_ls.setup({
+      ensure_installed = {
+        "stylua",
+        "ruff",
+      },
+      automatic_installation = true,
+    })
+
+    -- TODO: Add formatting for other languages
     null_ls.setup({
       sources = {
         -- lua stuff
-        -- null_ls.builtins.formatting.stylua.with({
-        --   condition = function(utils)
-        --     return utils.root_has_file({ "stylua.toml", ".stylua.toml" })
-        --   end,
-        -- }),
-
-        -- c stuff
-        null_ls.builtins.formatting.clang_format,
+        null_ls.builtins.formatting.stylua.with({
+          condition = function(utils)
+            return utils.root_has_file({ "stylua.toml", ".stylua.toml" })
+          end,
+        }),
 
         -- python stuff
-        -- null_ls.builtins.formatting.isort,
-        -- null_ls.builtins.formatting.black,
-        -- null_ls.builtins.diagnostics.mypy.with({
-        --   extra_args = function()
-        --     local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
-        --     return { "--python-executable", virtual .. "/bin/python3" }
-        --   end,
-        -- }),
-      },
-      -- Formatting on save
-      -- on_attach = function(client, bufnr)
-      --   if client.supports_method("textDocument/formatting") then
-      --     vim.api.nvim_clear_autocmds({
-      --       group = augroup,
-      --       buffer = bufnr,
-      --     })
-      --     vim.api.nvim_create_autocmd("BufWritePre", {
-      --       group = augroup,
-      --       buffer = bufnr,
-      --       callback = function()
-      --         vim.lsp.buf.format({ bufnr = bufnr })
-      --       end,
-      --     })
-      --   end
-      -- end,
-    })
+        ruff.with({
+          extra_args = {
+            "--extend-select",
+            "I",
+          },
+        }),
+        ruff_format,
 
-    vim.keymap.set("n", "<leader>fm", vim.lsp.buf.format, {})
+        -- c stuff
+        -- null_ls.builtins.formatting.clang_format,
+      },
+    })
   end,
 }
