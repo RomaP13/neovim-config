@@ -1,16 +1,23 @@
+local map = vim.keymap.set
+
 return {
   {
     "williamboman/mason.nvim",
     config = function()
-      local config = require("mason")
-      config.setup({})
+      local mason = require("mason")
+      mason.setup({
+        ui = {
+          border = "rounded",
+        },
+      })
+      map("n", "<leader>im", ":Mason<CR>", { silent = true })
     end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
     config = function()
-      local config = require("mason-lspconfig")
-      config.setup({})
+      local mason_lspconfig = require("mason-lspconfig")
+      mason_lspconfig.setup({})
     end,
   },
   {
@@ -18,7 +25,6 @@ return {
     config = function()
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       local lspconfig = require("lspconfig")
-      local map = vim.keymap.set
 
       -- Define a border style
       local border = {
@@ -34,14 +40,24 @@ return {
 
       -- Override the default hover handler
       local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-      function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+      function vim.lsp.util.custom_open_floating_preview(contents, syntax, opts, ...)
         opts = opts or {}
         opts.border = opts.border or border
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
 
+      -- Assign the custom function
+      vim.lsp.util.open_floating_preview = vim.lsp.util.custom_open_floating_preview
+
       vim.diagnostic.config({
-        float = { border = "rounded" },
+        float = {
+          border = "rounded",
+        },
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+        virtual_text = true,
       })
 
       lspconfig.lua_ls.setup({
@@ -66,6 +82,7 @@ return {
               checkThirdParty = false,
               library = {
                 vim.env.VIMRUNTIME,
+                "${3rd}/luv/library",
               },
             },
           })
@@ -88,7 +105,10 @@ return {
             disableFormatting = true,
           },
           python = {
-            pythonPath = vim.fn.systemlist("poetry env info --path")[1] .. "/bin/python",
+            pythonPath = vim.fn.systemlist("poetry -C backend env info --path")[1] .. "/bin/python",
+            analysis = {
+              diagnosticMode = "workspace",
+            },
           },
         },
       })
@@ -97,6 +117,11 @@ return {
       lspconfig.ruff.setup({
         capabilities = capabilities,
         filetypes = { "python" },
+        init_options = {
+          settings = {
+            lineLength = 80,
+          },
+        },
       })
 
       -- Disable Ruff's hover in favor of Pyright
@@ -122,9 +147,15 @@ return {
       map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
       map("n", "<leader>rn", vim.lsp.buf.rename, {})
       map("n", "<leader>fm", vim.lsp.buf.format, {})
+
+      -- Diagnostic
       map("n", "<leader>of", vim.diagnostic.open_float, {})
-      map("n", "[d", vim.diagnostic.goto_prev, {})
-      map("n", "]d", vim.diagnostic.goto_next, {})
+      map("n", "[d", function()
+        vim.diagnostic.jump({ count = -1, float = true })
+      end, { desc = "Go to previous [D]iagnostic message" })
+      map("n", "]d", function()
+        vim.diagnostic.jump({ count = 1, float = true })
+      end, { desc = "Go to next [D]iagnostic message" })
     end,
   },
 }
