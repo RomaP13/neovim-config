@@ -13,7 +13,12 @@ return {
 
     mason_null_ls.setup({
       ensure_installed = {
+        -- lua stuff
+        "lua_language_server",
         "stylua",
+
+        -- python stuff
+        "pyright",
         "ruff",
       },
       automatic_installation = true,
