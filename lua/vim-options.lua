@@ -21,7 +21,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = "yes"
 
 -- Decrease update time
-vim.opt.updatetime = 700
+vim.opt.updatetime = 200
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
@@ -45,39 +45,8 @@ vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Coc extensions
-vim.g.coc_global_extensions = {
-  "coc-snippets",
-  -- Languages
-  "coc-pyright",
-  "coc-lua",
-  "coc-clangd",
-
-  -- Front-End stuff
-  "coc-html",
-  "coc-htmldjango",
-  "coc-htmlhint",
-  "coc-html-css-support",
-  "coc-css",
-  "coc-tsserver",
-  "coc-emmet",
-
-  -- TODO: Find out about coc lua. Format doesn't work. or works??? --
-
-  -- Other stuff
-  "coc-json",
-  "coc-docker",
-}
-
 -- Window layout for undotree
 vim.g.undotree_WindowLayout = 4
-
--- Snippets
--- Use <C-w> for jump to next placeholder
-vim.g.coc_snippet_next = '<c-w>'
-
--- Use <C-s> for jump to previous placeholder
-vim.g.coc_snippet_prev = '<c-s>'
 
 vim.g.foldmethod = "manual"
 vim.g.foldcolumn = 1

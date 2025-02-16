@@ -37,14 +37,6 @@ map("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 map("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 map("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
--- Diagnostic keymaps
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
-
--- TODO: remove mappings? The first one is useless and the last one doesn't work
-map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
-map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-
 -- Move line in the visual mode
 map("v", "J", ":m '>+1<CR>gv=gv", { silent = true })
 map("v", "K", ":m '<-2<CR>gv=gv", { silent = true })
@@ -65,6 +57,9 @@ map("v", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
 -- Deleting without yanking
 map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
 map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
+
+map("n", "<C-]>", ":cnext<CR>", { silent = true })
+map("n", "<C-[>", ":cprev<CR>", { silent = true })
 
 -- Join selected paragraphs and copy them to the clipboard
 map("v", "<leader>jp", ":lua require('utils.text_utils').join_paragraphs()<CR>", { noremap = true, silent = true })

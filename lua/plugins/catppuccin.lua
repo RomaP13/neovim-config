@@ -18,7 +18,6 @@ return {
       end,
 
       integrations = {
-        coc_nvim = true,
         gitsigns = true,
         dap = true,
         dap_ui = true,
