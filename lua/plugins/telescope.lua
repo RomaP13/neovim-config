@@ -22,9 +22,9 @@ return {
         },
         pickers = {
           colorscheme = {
-            enable_preview = true
-          }
-        }
+            enable_preview = true,
+          },
+        },
       })
 
       -- load extensions
@@ -41,12 +41,25 @@ return {
       map("n", "<leader>fh", builtin.help_tags, { silent = true })
       map("n", "<leader>fw", builtin.grep_string, { silent = true })
       map("n", "<leader>fr", builtin.resume, { silent = true })
-      map("n", "<leader>gt", builtin.git_status, { silent = true })
       map("n", "<leader>gc", builtin.git_commits, { silent = true })
 
-      map("n", "<leader>nt", ":lua require('telescope').extensions.notify.notify()<CR>", { silent = true, desc = "Open Messages in Telescope" })
-      map("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", { silent = true })
+      map(
+        "n",
+        "<leader>nt",
+        ":lua require('telescope').extensions.notify.notify()<CR>",
+        { silent = true, desc = "Open Messages in Telescope" }
+      )
+      map(
+        "n",
+        "<leader>fg",
+        ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",
+        { silent = true }
+      )
 
+      -- TODO: find a way to make this work
+      -- map("n", "<leader>fg", function() config.extensions.live_grep_args.live_grep_args({vimgrep_arguments = { "rg", "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case", "YOUR_ARGUMENT" }}) end)
+
+      -- TODO: define this function somewhere else???
       -- Open buffers with Telescope. Press Ctrl-r to delete buffer from the list
       map("n", "<leader>fb", function()
         builtin.buffers({
@@ -62,13 +75,43 @@ return {
             mapp("i", "<C-r>", delete_buf)
 
             return true
-          end
+          end,
         }, {
           sort_lastused = true,
           sort_mru = true,
-          theme = "dropdown"
+          theme = "dropdown",
         })
       end, { silent = true })
+
+      -- TODO: remove global variable and make it local. Think about a better way to do this
+      -- Function to jump to the current file in git_status
+      _G.git_status_jump_to_current = function(opts)
+        opts = opts or {}
+        local buf_path = vim.api.nvim_buf_get_name(0)
+
+        opts.on_complete = {
+          function(self)
+            local selection_idx
+            for i, entry in ipairs(self.finder.results) do
+              if buf_path == entry.path then
+                selection_idx = i
+                break
+              end
+            end
+            self:set_selection(self:get_row(selection_idx))
+          end,
+        }
+
+        require("telescope.builtin").git_status(opts)
+      end
+
+      -- Corrected keymap
+      vim.api.nvim_set_keymap(
+        "n",
+        "<leader>gs",
+        ":lua git_status_jump_to_current()<CR>",
+        { noremap = true, silent = true }
+      )
     end,
   },
 }
