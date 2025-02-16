@@ -4,11 +4,10 @@ return {
   -- use a release tag to download pre-built binaries
   version = "*",
 
-  ---@module "blink.cmp"
-  ---@type blink.cmp.Config
   opts = {
     -- See the full "keymap" documentation for information on defining your own keymap.
     keymap = {
+      preset = "none",
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-d>"] = { "hide" },
       ["<C-y>"] = { "select_and_accept" },
@@ -29,22 +28,22 @@ return {
 
     completion = {
       menu = {
-        border = "rounded"
+        border = "rounded",
       },
       documentation = {
         auto_show = true,
         auto_show_delay_ms = 500,
         window = {
-          border = "rounded"
-        }
+          border = "rounded",
+        },
       },
     },
     signature = {
       enabled = true,
       window = {
         show_documentation = true,
-        border = "rounded"
-      }
+        border = "rounded",
+      },
     },
 
     appearance = {
@@ -52,7 +51,7 @@ return {
       -- Useful for when your theme doesn"t support blink.cmp
       -- Will be removed in a future release
       use_nvim_cmp_as_default = true,
-      nerd_font_variant = "normal"
+      nerd_font_variant = "normal",
     },
 
     -- Default list of enabled providers defined so that you can extend it
@@ -61,5 +60,5 @@ return {
       default = { "lsp", "path", "snippets", "buffer" },
     },
   },
-  opts_extend = { "sources.default" }
+  opts_extend = { "sources.default" },
 }
