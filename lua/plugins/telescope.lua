@@ -30,7 +30,7 @@ return {
       -- load extensions
       local extensions_list = {
         "ui-select",
-        "live_grep_args",
+        -- "live_grep_args",
       }
       for _, ext in ipairs(extensions_list) do
         config.load_extension(ext)
@@ -56,8 +56,24 @@ return {
         { silent = true }
       )
 
-      -- TODO: find a way to make this work
-      -- map("n", "<leader>fg", function() config.extensions.live_grep_args.live_grep_args({vimgrep_arguments = { "rg", "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case", "YOUR_ARGUMENT" }}) end)
+      -- Custom function to search for phrases
+      _G.search_phrase = function()
+        local input = vim.fn.input("Enter the phrase: ")
+
+        if input ~= "" then
+          -- Replace spaces between words with the regex pattern \s+\w*\s*
+          local query = input:gsub(" ", "\\s+\\w*\\s*")
+          -- Enclose the entire query in double quotes
+          query = '"' .. query .. '"'
+
+          -- Perform the search using live_grep_args with the -U flag
+          config.extensions.live_grep_args.live_grep_args({ default_text = query .. " -U" })
+        else
+          print("No phrases entered.")
+        end
+      end
+
+      vim.api.nvim_set_keymap("n", "<leader>fv", ":lua search_phrase()<CR>", { noremap = true, silent = true })
 
       -- TODO: define this function somewhere else???
       -- Open buffers with Telescope. Press Ctrl-r to delete buffer from the list
@@ -112,6 +128,8 @@ return {
         ":lua git_status_jump_to_current()<CR>",
         { noremap = true, silent = true }
       )
+
+      config.load_extension("live_grep_args")
     end,
   },
 }
