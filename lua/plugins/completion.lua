@@ -1,6 +1,8 @@
 return {
   "saghen/blink.cmp",
 
+  -- TODO: add blink compat plugin
+
   -- use a release tag to download pre-built binaries
   version = "*",
 
