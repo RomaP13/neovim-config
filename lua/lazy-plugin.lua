@@ -12,4 +12,13 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
-require("lazy").setup("plugins")
+require("lazy").setup({
+  spec = {
+    { import = "plugins" },
+  },
+  ui = {
+    border = "rounded",
+  },
+})
+
+vim.keymap.set("n", "<leader>lz", ":Lazy<CR>", { noremap = true, silent = true, desc = "Open Lazy.nvim" })
