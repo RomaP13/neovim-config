@@ -1,3 +1,5 @@
+-- TODO: Improve readbility of this file, I'm confused
+
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -36,6 +38,18 @@ return {
         config.load_extension(ext)
       end
 
+      local function get_priority_files()
+        local path = vim.fn.expand("~/.config/nvim/rg_priority.txt") -- File with prioritized paths
+        local files = {}
+
+        -- Read the file line by line
+        for line in io.lines(path) do
+          table.insert(files, line)
+        end
+
+        return files
+      end
+
       map("n", "<leader>ff", builtin.find_files, { silent = true })
       map("n", "<leader>fg", builtin.live_grep, { silent = true })
       map("n", "<leader>fh", builtin.help_tags, { silent = true })
@@ -55,6 +69,12 @@ return {
         ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",
         { silent = true }
       )
+      map("n", "<leader>fi", function()
+        require("telescope").extensions.live_grep_args.live_grep_args({
+          search_dirs = get_priority_files(),
+          additional_args = { "--sort", "path" },
+        })
+      end, { silent = true })
 
       -- Custom function to search for phrases
       _G.search_phrase = function()
