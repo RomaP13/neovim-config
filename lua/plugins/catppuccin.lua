@@ -14,11 +14,23 @@ return {
           LineNr = { fg = colors.rosewater },
           CursorLineNr = { fg = colors.green },
           Comment = { fg = "#808A9F" },
+
+          -- Custom highlights for blink-cmp borders
+          BlinkCmpMenuBorder = { fg = colors.blue }, -- Completion menu border
+          BlinkCmpDocBorder = { fg = colors.blue }, -- Documentation border
+          BlinkCmpSignatureHelpBorder = { fg = colors.blue }, -- Signature help border
+
+          -- Custom highlights for diffview
+          DiffAdd = { bg = "#A6DA95", fg = "#0E2239" },
+          DiffDelete = { bg = "#ED8796", fg = "#000000" },
+          DiffChange = { bg = "#EED49F", fg = "#000000" },
+          DiffText = { bg = "#B9C0F8", fg = "#0E0953" },
         }
       end,
 
       integrations = {
         blink_cmp = true,
+        diffview = true,
         gitsigns = true,
         markdown = true,
         mason = true,
