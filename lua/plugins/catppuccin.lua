@@ -31,12 +31,12 @@ return {
       integrations = {
         blink_cmp = true,
         diffview = true,
+        fidget = true,
         gitsigns = true,
         markdown = true,
         mason = true,
         dap = true,
         dap_ui = true,
-        notify = true,
         nvimtree = true,
         treesitter = true,
         ufo = true,
