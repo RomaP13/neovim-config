@@ -1,10 +1,12 @@
 local fn = vim.fn
+local text_utils = require("utils.text_utils")
 
 vim.api.nvim_create_augroup("bufcheck", { clear = true })
 vim.api.nvim_create_augroup("LspFormatting", {})
 
 -- Highlight yanks
 vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking (copying) text",
   group = "bufcheck",
   pattern = "*",
   callback = function()
@@ -26,7 +28,25 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- Define a function to check if formatting should run
 local function should_format()
-  return vim.b.format_on_save ~= false
+  -- Explicitly disable formatting if set
+  if vim.b.format_on_save == false then
+    return false
+  end
+
+  -- Always format Python with Ruff
+  if vim.bo.filetype == "python" then
+    return true
+  end
+
+  -- Check if any attached LSP client supports formatting
+  local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+  for _, client in ipairs(clients) do
+    if client.supports_method("textDocument/formatting") then
+      return true
+    end
+  end
+
+  return false
 end
 
 -- Python: Format code and organize imports on save using Ruff
@@ -39,6 +59,18 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end
   end,
 })
+
+-- Other languages: Format only if the LSP client supports it
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = "LspFormatting",
+  pattern = "*",
+  callback = function()
+    if should_format() then
+      vim.lsp.buf.format({ async = false })
+    end
+  end,
+})
+
 -- Add commands to toggle formatting
 vim.api.nvim_create_user_command("ToggleFormatOnSave", function()
   vim.b.format_on_save = not vim.b.format_on_save
@@ -56,73 +88,64 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
--- vim.api.nvim_create_user_command("RuffCheck", function()
---   vim.fn.jobstart("ruff check .", {
---     stdout_buffered = true,
---     on_stdout = function(_, data)
---       for _, line in ipairs(data) do
---         print(line) -- Print Ruff's output in Neovim
---       end
---     end,
---   })
--- end, {})
+local function should_copy_jendo()
+  return vim.b.copy_jendo ~= false
+end
 
--- vim.api.nvim_create_user_command("RuffDiagnostics", function()
---   local output = {}
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = "LspFormatting",
+  pattern = "Jendo.txt",
+  callback = function()
+    if should_copy_jendo() then
+      local lines = text_utils.get_visual_selection()
 
---   vim.fn.jobstart("ruff check --output-format=json .", {
---     stdout_buffered = true,
---     on_stdout = function(_, data)
---       if not data then
---         return
---       end
---       for _, line in ipairs(data) do
---         table.insert(output, line)
---       end
---     end,
---     on_exit = function()
---       if #output == 0 then
---         print("Ruff: No output received.")
---         return
---       end
+      local eng_text = {}
+      local rus_text = {}
+      local processed_lines = {}
 
---       local json_str = table.concat(output, "")
---       local success, items = pcall(vim.fn.json_decode, json_str)
+      local is_english = false
 
---       if not success then
---         print("Error decoding Ruff JSON output: " .. json_str)
---         return
---       end
+      for i, line in ipairs(lines) do
+        -- Strip leading and trailing whitespace like Python's strip()
+        line = string.gsub(line, "^%s*(.-)%s*$", "%1")
+        if line ~= "" then
+          if is_english then
+            table.insert(eng_text, line)
+          else
+            table.insert(rus_text, line)
+          end
+          is_english = not is_english
+        end
+      end
 
---       local namespace = vim.api.nvim_create_namespace("ruff")
---       local diagnostics_by_buf = {}
+      -- Combine rus_text and eng_text with separator
+      for _, line in ipairs(eng_text) do
+        table.insert(processed_lines, line)
+      end
+      table.insert(processed_lines, "---")
+      for _, line in ipairs(rus_text) do
+        table.insert(processed_lines, line)
+      end
 
---       for _, item in ipairs(items) do
---         local bufnr = vim.fn.bufnr(item.filename, true) -- Open the file in the background if needed
+      vim.fn.setreg("+", table.concat(processed_lines, "\n\n"))
 
---         if bufnr and bufnr ~= -1 then
---           diagnostics_by_buf[bufnr] = diagnostics_by_buf[bufnr] or {}
+      print("Text from novel Jendo copied to clipboard.")
+    end
+  end,
+})
 
---           table.insert(diagnostics_by_buf[bufnr], {
---             bufnr = bufnr,
---             lnum = item.location.row - 1,
---             col = item.location.column - 1,
---             severity = vim.diagnostic.severity.WARN,
---             message = item.message,
---             source = "ruff",
---           })
---         end
---       end
+vim.api.nvim_create_user_command("ToggleCopyJendo", function()
+  vim.b.copy_jendo = not vim.b.copy_jendo
+  print("Copy Jendo:", vim.b.copy_jendo)
+end, {})
 
---       -- Clear previous Ruff diagnostics for all buffers
---       vim.diagnostic.reset(namespace)
-
---       -- Set new diagnostics for each buffer
---       for bufnr, diagnostics in pairs(diagnostics_by_buf) do
---         vim.diagnostic.set(namespace, bufnr, diagnostics, {})
---       end
-
---       print("Ruff diagnostics updated.")
---     end,
---   })
--- end, {})
+-- Set default value
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = "bufcheck",
+  pattern = "Jendo.txt",
+  callback = function()
+    if vim.b.copy_jendo == nil then
+      vim.b.copy_jendo = false
+    end
+  end,
+})
