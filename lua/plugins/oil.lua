@@ -14,6 +14,10 @@ return {
     require("oil").setup({
       delete_to_trash = true,
       skip_confirm_for_simple_edits = true,
+      view_options = {
+        -- Show files and directories that start with "."
+        show_hidden = true,
+      }
     })
     local map = vim.keymap.set
     map("n", "-", ":Oil<CR>", { desc = "Open parent directory" })
