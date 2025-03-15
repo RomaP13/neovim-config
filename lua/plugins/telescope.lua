@@ -87,7 +87,11 @@ return {
           query = '"' .. query .. '"'
 
           -- Perform the search using live_grep_args with the -U flag
-          config.extensions.live_grep_args.live_grep_args({ default_text = query .. " -U" })
+          config.extensions.live_grep_args.live_grep_args({
+            search_dirs = get_priority_files(),
+            additional_args = { "--sort", "path" },
+            default_text = query .. " -U",
+          })
         else
           print("No phrases entered.")
         end
