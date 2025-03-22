@@ -21,6 +21,8 @@ return {
     end,
   },
   {
+    -- TODO: add blink.cmp as a dependency.
+    -- I think I should care about it. It can lead to some problems. Also, check other plugins for the same problem.
     "neovim/nvim-lspconfig",
     config = function()
       local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -105,7 +107,8 @@ return {
             disableFormatting = true,
           },
           python = {
-            pythonPath = vim.fn.systemlist("poetry -C backend env info --path")[1] .. "/bin/python",
+            -- FIX: fix poetry support
+            pythonPath = ".venv/bin/python" .. "/bin/python",
             analysis = {
               diagnosticMode = "workspace",
             },
@@ -113,14 +116,20 @@ return {
         },
       })
 
-      -- Configure Ruff
-      lspconfig.ruff.setup({
+      lspconfig.html.setup({
         capabilities = capabilities,
-        filetypes = { "python" },
-        init_options = {
-          settings = {
-            lineLength = 80,
-          },
+      })
+
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities,
+        cmd = { "typescript-language-server", "--stdio" },
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "javascript.jsx",
+          "typescript",
+          "typescriptreact",
+          "typescript.tsx",
         },
       })
 
