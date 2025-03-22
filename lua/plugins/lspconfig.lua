@@ -21,6 +21,8 @@ return {
     end,
   },
   {
+    -- TODO: add blink.cmp as a dependency.
+    -- I think I should care about it. It can lead to some problems. Also, check other plugins for the same problem.
     "neovim/nvim-lspconfig",
     config = function()
       local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -66,8 +68,8 @@ return {
           if client.workspace_folders then
             local path = client.workspace_folders[1].name
             if
-              path ~= vim.fn.stdpath("config")
-              and (vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc"))
+                path ~= vim.fn.stdpath("config")
+                and (vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc"))
             then
               return
             end
@@ -105,7 +107,8 @@ return {
             disableFormatting = true,
           },
           python = {
-            pythonPath = vim.fn.systemlist("poetry -C backend env info --path")[1] .. "/bin/python",
+            -- FIX: fix poetry support
+            pythonPath = ".venv/bin/python" .. "/bin/python",
             analysis = {
               diagnosticMode = "workspace",
             },
@@ -113,17 +116,24 @@ return {
         },
       })
 
-      -- Configure Ruff
-      lspconfig.ruff.setup({
+      lspconfig.html.setup({
         capabilities = capabilities,
-        filetypes = { "python" },
-        init_options = {
-          settings = {
-            lineLength = 80,
-          },
+      })
+
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities,
+        cmd = { "typescript-language-server", "--stdio" },
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "javascript.jsx",
+          "typescript",
+          "typescriptreact",
+          "typescript.tsx",
         },
       })
 
+      -- TODO: Remove???
       -- Disable Ruff's hover in favor of Pyright
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
