@@ -25,7 +25,7 @@ return {
     },
     {
       "<leader>td",
-      "<:Trouble todo<CR>",
+      "<:Trouble todo toggle focus=true<CR>",
       desc = "TODOs (Trouble)",
     },
   },
