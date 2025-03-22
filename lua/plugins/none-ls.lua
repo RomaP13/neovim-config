@@ -8,9 +8,6 @@ return {
     local mason_null_ls = require("mason-null-ls")
     local null_ls = require("null-ls")
 
-    local ruff = require("none-ls.formatting.ruff")
-    local ruff_format = require("none-ls.formatting.ruff_format")
-
     mason_null_ls.setup({
       ensure_installed = {
         -- lua stuff
@@ -20,11 +17,21 @@ return {
         -- python stuff
         "pyright",
         "ruff",
+
+        -- javascript and typescript stuff
+        "typescript-language-server",
+        "prettier",
+
+        -- c stuff
+        "clangd",
+
+        -- TODO: Find out about write-good linter
       },
       automatic_installation = true,
     })
 
-    -- TODO: Add formatting for other languages
+    -- TODO: Add stuff:
+    -- hadolint - for dockerfile
     null_ls.setup({
       sources = {
         -- lua stuff
@@ -34,14 +41,28 @@ return {
           end,
         }),
 
-        -- python stuff
-        ruff.with({
-          extra_args = {
-            "--extend-select",
-            "I",
+        null_ls.builtins.formatting.prettier.with({
+          filetypes = {
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "vue",
+            "css",
+            "scss",
+            "less",
+            "html",
+            "json",
+            "jsonc",
+            "yaml",
+            -- "markdown",
+            -- "markdown.mdx",
+            "graphql",
+            "handlebars",
           },
         }),
-        ruff_format,
+
+        null_ls.builtins.code_actions.gitsigns,
 
         -- c stuff
         -- null_ls.builtins.formatting.clang_format,
