@@ -36,6 +36,10 @@ return {
         ["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
       },
 
+      cmdline = {
+        completion = { menu = { auto_show = true } },
+      },
+
       completion = {
         menu = {
           border = "rounded",
