@@ -82,20 +82,28 @@ return {
         return files
       end
 
+      -- File Pickers
       map("n", "<leader>ff", builtin.find_files, { silent = true })
-      map("n", "<leader>fg", builtin.live_grep, { silent = true })
-      map("n", "<leader>fb", builtin.buffers, { silent = true })
-      map("n", "<leader>fh", builtin.help_tags, { silent = true })
+      map("n", "<leader>gf", builtin.git_files, { silent = true })
       map("n", "<leader>fw", builtin.grep_string, { silent = true })
-      map("n", "<leader>fr", builtin.resume, { silent = true })
-      map("n", "<leader>gc", builtin.git_commits, { silent = true })
+      map("n", "<leader>fg", builtin.live_grep, { silent = true })
 
-      map(
-        "n",
-        "<leader>nt",
-        ":lua require('telescope').extensions.notify.notify()<CR>",
-        { silent = true, desc = "Open Messages in Telescope" }
-      )
+      -- Vim Pickers
+      map("n", "<leader>fb", builtin.buffers, { silent = true })
+      map("n", "<leader>fo", builtin.oldfiles, { silent = true })
+      map("n", "<leader>ch", builtin.command_history, { silent = true })
+      map("n", "<leader>fh", builtin.help_tags, { silent = true })
+      map("n", "<leader>vm", builtin.marks, { silent = true })
+      map("n", "<leader>fr", builtin.resume, { silent = true })
+
+      -- Git Pickers
+      map("n", "<leader>gc", builtin.git_commits, { silent = true })
+      map("n", "<leader>gb", builtin.git_bcommits, { silent = true })
+      -- TODO: Add git status
+
+      -- Custom Pickers
+      -- ...
+
       map(
         "n",
         "<leader>fg",
