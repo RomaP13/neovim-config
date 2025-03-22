@@ -83,8 +83,16 @@ return {
       end
 
       -- File Pickers
-      map("n", "<leader>ff", builtin.find_files, { silent = true })
-      map("n", "<leader>gf", builtin.git_files, { silent = true })
+      map("n", "<leader>ff", function()
+        builtin.find_files({
+          hidden = true,
+          no_ignore = true,
+          file_ignore_patterns = { ".venv/", ".git/", ".ruff_cache/", "__pycache__/", ".pytest_cache/" },
+        })
+      end, { silent = true })
+      map("n", "<leader>gf", function()
+        builtin.git_files({ show_untracked = true })
+      end)
       map("n", "<leader>fw", builtin.grep_string, { silent = true })
       map("n", "<leader>fg", builtin.live_grep, { silent = true })
 
