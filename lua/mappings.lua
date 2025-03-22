@@ -28,7 +28,6 @@ map("n", "<C-a>", ":bprev<CR>", { noremap = true, silent = true })
 map("n", "<C-d>", ":bnext<CR>", { noremap = true, silent = true })
 
 -- Buffer unloading
--- TODO: Think about the better way of managing buffers
 map("n", "<leader>bd", ":bd | bprev<CR>", { silent = true, desc = "Unload buffer and delete it from the buffer list" })
 
 -- Window navigation

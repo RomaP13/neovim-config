@@ -14,7 +14,6 @@ return {
 
       local config = require("telescope")
       local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
       local builtin = require("telescope.builtin")
 
       config.setup({
@@ -29,7 +28,11 @@ return {
               ["<C-u>"] = false,
               ["<C-d>"] = false,
 
+              -- Quit from insert mode
               ["<C-c>"] = actions.close,
+
+              -- Delete buffer
+              ["<C-d>"] = actions.delete_buffer + actions.move_to_top,
 
               -- Scroll the preview window
               ["<C-j>"] = actions.preview_scrolling_down,
@@ -81,6 +84,7 @@ return {
 
       map("n", "<leader>ff", builtin.find_files, { silent = true })
       map("n", "<leader>fg", builtin.live_grep, { silent = true })
+      map("n", "<leader>fb", builtin.buffers, { silent = true })
       map("n", "<leader>fh", builtin.help_tags, { silent = true })
       map("n", "<leader>fw", builtin.grep_string, { silent = true })
       map("n", "<leader>fr", builtin.resume, { silent = true })
@@ -127,30 +131,6 @@ return {
       end
 
       vim.api.nvim_set_keymap("n", "<leader>fv", ":lua search_phrase()<CR>", { noremap = true, silent = true })
-
-      -- TODO: Replace with built-in implementation. See https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#mapping-c-d-to-delete-buffer
-      -- Open buffers with Telescope. Press Ctrl-r to delete buffer from the list
-      map("n", "<leader>fb", function()
-        builtin.buffers({
-          initial_mode = "insert",
-          attach_mappings = function(prompt_bufnr, mapp)
-            local delete_buf = function()
-              local current_picker = action_state.get_current_picker(prompt_bufnr)
-              current_picker:delete_selection(function(selection)
-                vim.api.nvim_buf_delete(selection.bufnr, { force = true })
-              end)
-            end
-
-            mapp("i", "<C-r>", delete_buf)
-
-            return true
-          end,
-        }, {
-          sort_lastused = true,
-          sort_mru = true,
-          theme = "dropdown",
-        })
-      end, { silent = true })
 
       -- TODO: remove global variable and make it local. Think about a better way to do this
       -- Function to jump to the current file in git_status
