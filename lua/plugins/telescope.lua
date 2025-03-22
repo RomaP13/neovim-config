@@ -1,9 +1,9 @@
 -- TODO: Improve readbility of this file, I'm confused
+-- TODO: Find a way so that telescope window can move like Ctrl-E
 
 return {
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.6",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-ui-select.nvim",
@@ -13,10 +13,39 @@ return {
       local map = vim.keymap.set
 
       local config = require("telescope")
+      local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
       local builtin = require("telescope.builtin")
 
       config.setup({
+        defaults = {
+          layout_config = {
+            height = 0.9,
+            width = 0.9,
+            prompt_position = "top",
+          },
+          mappings = {
+            i = {
+              ["<C-u>"] = false,
+              ["<C-d>"] = false,
+
+              ["<C-c>"] = actions.close,
+
+              -- Scroll the preview window
+              ["<C-j>"] = actions.preview_scrolling_down,
+              ["<C-k>"] = actions.preview_scrolling_up,
+              ["<C-h>"] = actions.preview_scrolling_left,
+              ["<C-l>"] = actions.preview_scrolling_right,
+            },
+            n = {
+              -- Scroll the preview window
+              ["<C-j>"] = actions.preview_scrolling_down,
+              ["<C-k>"] = actions.preview_scrolling_up,
+              ["<C-h>"] = actions.preview_scrolling_left,
+              ["<C-l>"] = actions.preview_scrolling_right,
+            },
+          },
+        },
         extensions = {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown({}),
@@ -99,7 +128,7 @@ return {
 
       vim.api.nvim_set_keymap("n", "<leader>fv", ":lua search_phrase()<CR>", { noremap = true, silent = true })
 
-      -- TODO: define this function somewhere else???
+      -- TODO: Replace with built-in implementation. See https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#mapping-c-d-to-delete-buffer
       -- Open buffers with Telescope. Press Ctrl-r to delete buffer from the list
       map("n", "<leader>fb", function()
         builtin.buffers({
