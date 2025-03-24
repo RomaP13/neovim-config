@@ -50,3 +50,6 @@ vim.g.undotree_WindowLayout = 4
 
 vim.g.foldmethod = "manual"
 vim.g.foldcolumn = 1
+
+vim.opt.conceallevel = 2
+vim.opt.backupcopy = "yes"

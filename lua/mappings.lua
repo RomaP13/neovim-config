@@ -28,7 +28,6 @@ map("n", "<C-a>", ":bprev<CR>", { noremap = true, silent = true })
 map("n", "<C-d>", ":bnext<CR>", { noremap = true, silent = true })
 
 -- Buffer unloading
--- TODO: Think about the better way of managing buffers
 map("n", "<leader>bd", ":bd | bprev<CR>", { silent = true, desc = "Unload buffer and delete it from the buffer list" })
 
 -- Window navigation
@@ -58,8 +57,11 @@ map("v", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
 map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
 map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
 
+-- Quickfix
 map("n", "<C-]>", ":cnext<CR>", { silent = true })
 map("n", "<C-[>", ":cprev<CR>", { silent = true })
+map("n", "<leader>co", ":copen<CR>", { silent = true })
+map("n", "<leader>cc", ":cclose<CR>", { silent = true })
 
 -- Join selected paragraphs and copy them to the clipboard
 map("v", "<leader>jp", ":lua require('utils.text_utils').join_paragraphs()<CR>", { noremap = true, silent = true })

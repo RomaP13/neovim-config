@@ -19,6 +19,9 @@ require("lazy").setup({
   ui = {
     border = "rounded",
   },
+  change_detection = {
+    notify = false,
+  },
 })
 
 vim.keymap.set("n", "<leader>lz", ":Lazy<CR>", { noremap = true, silent = true, desc = "Open Lazy.nvim" })
