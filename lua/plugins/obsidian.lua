@@ -1,3 +1,6 @@
+-- TODO: replace this pluging with another one for markdown.
+-- Reason: setting conceallevel to 2 enable ui, but it breaks markdown
+
 return {
   "epwalsh/obsidian.nvim",
   dependencies = {
