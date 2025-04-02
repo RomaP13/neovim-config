@@ -27,6 +27,7 @@ return {
         "markdown",
         "markdown_inline",
         "json",
+        "jsonc",
         "yaml",
 
         -- Web development
@@ -47,6 +48,27 @@ return {
 
       indent = {
         enable = true,
+      },
+    })
+
+    vim.treesitter.language.register("bash", "dotenv")
+
+    -- Filetype detection
+    vim.filetype.add({
+      extension = {
+        mdx = "mdx",
+        log = "log",
+        conf = "conf",
+        env = "dotenv",
+      },
+      filename = {
+        [".env"] = "dotenv",
+        ["env"] = "dotenv",
+        ["tsconfig.json"] = "jsonc",
+      },
+      pattern = {
+        -- INFO: Match filenames like - ".env.example", ".env.local" and so on
+        ["%.env%.[%w_.-]+"] = "dotenv",
       },
     })
   end,
