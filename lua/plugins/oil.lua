@@ -35,7 +35,7 @@ return {
         show_hidden = false,
         -- This function defines what is considered a "hidden" file
         is_hidden_file = function(name, _)
-          local allowed_files = { ".gitignore", ".dockerignore", ".env", ".config" }
+          local allowed_files = { ".gitignore", ".dockerignore", ".env", ".env.example", ".config" }
           for _, allowed in ipairs(allowed_files) do
             if name == allowed then
               return false -- Don't hide this file
