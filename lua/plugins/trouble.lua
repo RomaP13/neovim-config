@@ -20,12 +20,12 @@ return {
     },
     {
       "<leader><CR>",
-      ":Trouble lsp toggle focus=false win.position=right<CR>",
+      ":Trouble lsp toggle focus=false win.position=bottom<CR>",
       desc = "LSP Definitions / references / ... (Trouble)",
     },
     {
       "<leader>td",
-      "<:Trouble todo toggle focus=true<CR>",
+      ":Trouble todo toggle focus=true<CR>",
       desc = "TODOs (Trouble)",
     },
   },
