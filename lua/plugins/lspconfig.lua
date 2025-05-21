@@ -114,6 +114,24 @@ return {
             },
           },
         },
+        on_init = function(client)
+          print("Pyright LSP initialized for client ID: " .. client.id)
+        end,
+      })
+
+      -- FIX: Fix duplicate pyright clients (TEMPORARY FIX)
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("prevent_duplicate_pyright", { clear = true }),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == "pyright" then
+            if client.config.settings.python.analysis.diagnosticMode ~= "workspace" then
+              vim.lsp.stop_client(client.id)
+              print("Stopped duplicate pyright client ID: " .. client.id)
+            end
+          end
+        end,
+        desc = "Prevent duplicate pyright LSP clients",
       })
 
       lspconfig.html.setup({
