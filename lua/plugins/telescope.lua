@@ -15,6 +15,7 @@ return {
       local config = require("telescope")
       local actions = require("telescope.actions")
       local builtin = require("telescope.builtin")
+      local text_utils = require("utils.text_utils")
 
       config.setup({
         defaults = {
@@ -94,6 +95,13 @@ return {
         builtin.git_files({ show_untracked = true })
       end)
       map("n", "<leader>fw", builtin.grep_string, { silent = true })
+      -- Visual mode mapping: search selected text
+      map(
+        "v",
+        "<leader>fw",
+        ":lua search_selected_text()<CR>",
+        { noremap = true, silent = true, desc = "Grep selected text" }
+      )
       map("n", "<leader>fg", builtin.live_grep, { silent = true })
 
       -- Vim Pickers
@@ -124,6 +132,16 @@ return {
           additional_args = { "--sort", "path" },
         })
       end, { silent = true })
+
+      _G.search_selected_text = function()
+        local selected_text = text_utils.get_visual_selection()
+        if not selected_text then
+          return
+        end
+        -- Get the first line and strip it
+        local first_line = string.gsub(selected_text[1], "^%s*(.-)%s*$", "%1")
+        builtin.grep_string({ search = first_line })
+      end
 
       -- Custom function to search for phrases
       _G.search_phrase = function()
