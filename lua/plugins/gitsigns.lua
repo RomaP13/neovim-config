@@ -3,6 +3,10 @@ return {
   config = function()
     local gitsigns = require("gitsigns")
     gitsigns.setup({
+      preview_config = {
+        border = "rounded",
+      },
+
       on_attach = function(bufnr)
         local function map(mode, l, r, opts)
           opts = opts or {}
