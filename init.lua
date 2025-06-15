@@ -1,4 +1,5 @@
 require("vim-options")
+require("core/lsp")
 require("mappings")
 require("lazy-plugin")
 require("autocmds")
