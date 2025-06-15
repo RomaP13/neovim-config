@@ -31,20 +31,7 @@ local function should_format()
     return false
   end
 
-  -- Always allow Python formatting with Ruff
-  if vim.bo.filetype == "python" then
-    return true
-  end
-
-  -- Check if any attached LSP client supports formatting
-  local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
-  for _, client in ipairs(clients) do
-    if client.supports_method("textDocument/formatting", { bufnr = vim.api.nvim_get_current_buf() }) then
-      return true
-    end
-  end
-
-  return false
+  return true
 end
 
 -- Python: Format and organize imports on save with Ruff
@@ -58,20 +45,20 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
--- Other languages: Format on save with LSP
+-- Other languages: Format on save with conform
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = "LspFormatting",
   pattern = "*",
-  callback = function()
+  callback = function(args)
     -- Skip Python files
     if vim.bo.filetype == "python" then
       return
     end
     if should_format() then
-      local success, err = pcall(vim.lsp.buf.format, { async = false })
-      if not success then
-        vim.notify("LSP formatting failed: " .. tostring(err), vim.log.levels.WARN)
-      end
+      require("conform").format({
+        bufnr = args.buf,
+        async = false, -- block saving until formatting is done
+      })
     end
   end,
 })
