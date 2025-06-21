@@ -1,3 +1,12 @@
+local function organize_imports()
+  local params = {
+    command = "_typescript.organizeImports",
+    arguments = { vim.api.nvim_buf_get_name(0) },
+    title = "",
+  }
+  vim.lsp.buf.execute_command(params)
+end
+
 return {
   init_options = {
     hostInfo = "neovim",
@@ -50,6 +59,10 @@ return {
         },
       })
     end, {})
+
+    -- TODO: Refactor this
+    vim.api.nvim_buf_create_user_command(bufnr, "OrganizeImports", organize_imports, { desc = "Organize imports" })
+    vim.keymap.set("n", "<leader>or", organize_imports, { desc = "Organize imports using tsserver" })
 
     -- Trigger diagnostics across workspace
     require("utils.lsp_diagnostics_loader").trigger_workspace_diagnostics(client, bufnr)
