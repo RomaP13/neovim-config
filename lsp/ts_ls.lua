@@ -35,7 +35,7 @@ return {
       return vim.NIL
     end,
   },
-  on_attach = function(client)
+  on_attach = function(client, bufnr)
     -- ts_ls provides `source.*` code actions that apply to the whole file. These only appear in
     -- `vim.lsp.buf.code_action()` if specified in `context.only`.
     vim.api.nvim_buf_create_user_command(0, "LspTypescriptSourceAction", function()
@@ -50,5 +50,8 @@ return {
         },
       })
     end, {})
+
+    -- Trigger diagnostics across workspace
+    require("utils.lsp_diagnostics_loader").trigger_workspace_diagnostics(client, bufnr)
   end,
 }
