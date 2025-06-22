@@ -26,4 +26,14 @@ return {
       },
     },
   },
+  on_attach = function()
+    -- Format and organize imports on save with Ruff
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("RuffFormat", { clear = true }),
+      pattern = "*.py",
+      callback = function()
+        vim.cmd("RuffFormat")
+      end,
+    })
+  end,
 }

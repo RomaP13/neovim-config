@@ -1,10 +1,20 @@
-local function organize_imports()
+---@param bufnr number?
+---@return nil
+---Organize imports
+local function organize_imports(bufnr)
+  -- gets the current bufnr if no bufnr is passed
+  if not bufnr then
+    bufnr = vim.api.nvim_get_current_buf()
+  end
+
+  -- params for the request
   local params = {
     command = "_typescript.organizeImports",
-    arguments = { vim.api.nvim_buf_get_name(0) },
+    arguments = { vim.api.nvim_buf_get_name(bufnr) },
     title = "",
   }
-  vim.lsp.buf.execute_command(params)
+
+  vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", params, 500)
 end
 
 return {
@@ -45,6 +55,19 @@ return {
     end,
   },
   on_attach = function(client, bufnr)
+    -- Format and organize imports on save
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("TypescriptFormatting", { clear = true }),
+      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+      callback = function(args)
+        organize_imports(bufnr)
+        require("conform").format({
+          bufnr = args.buf,
+          async = false, -- block saving until formatting is done
+        })
+      end,
+    })
+
     -- ts_ls provides `source.*` code actions that apply to the whole file. These only appear in
     -- `vim.lsp.buf.code_action()` if specified in `context.only`.
     vim.api.nvim_buf_create_user_command(0, "LspTypescriptSourceAction", function()
@@ -61,8 +84,12 @@ return {
     end, {})
 
     -- TODO: Refactor this
-    vim.api.nvim_buf_create_user_command(bufnr, "OrganizeImports", organize_imports, { desc = "Organize imports" })
-    vim.keymap.set("n", "<leader>or", organize_imports, { desc = "Organize imports using tsserver" })
+    vim.api.nvim_buf_create_user_command(bufnr, "OrganizeImports", function()
+      organize_imports(bufnr)
+    end, { desc = "Organize imports" })
+    vim.keymap.set("n", "<leader>or", function()
+      organize_imports(bufnr)
+    end, { desc = "Organize imports using tsserver", buffer = bufnr })
 
     -- Trigger diagnostics across workspace
     require("utils.lsp_diagnostics_loader").trigger_workspace_diagnostics(client, bufnr)

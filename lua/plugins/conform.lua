@@ -31,4 +31,25 @@ return {
       desc = "Format buffer with conform",
     },
   },
+  config = function(_, opts)
+    require("conform").setup(opts)
+
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
+      pattern = {
+        "*.lua",
+        "*.json",
+        "*.jsonc",
+        "*.yaml",
+        "*.html",
+        "*.css",
+      },
+      callback = function(args)
+        require("conform").format({
+          bufnr = args.buf,
+          async = false, -- block saving until formatting is done
+        })
+      end,
+    })
+  end,
 }
