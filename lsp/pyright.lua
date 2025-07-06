@@ -1,4 +1,8 @@
-return {
+local lsp_cmd = require("utils.lsp_cmd")
+
+--- Pyright language server configuration
+---@type vim.lsp.Config
+local config = {
   cmd = {
     vim.fn.expand("~/.local/share/nvim/mason/bin/pyright-langserver"),
     "--stdio",
@@ -37,3 +41,5 @@ return {
     })
   end,
 }
+
+return config

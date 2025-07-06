@@ -1,13 +1,15 @@
+local lsp_cmd = require("utils.lsp_cmd")
+
+--- Organize imports
 ---@param bufnr number?
 ---@return nil
----Organize imports
 local function organize_imports(bufnr)
-  -- gets the current bufnr if no bufnr is passed
+  -- Get the current buffer if no buffer is passed
   if not bufnr then
     bufnr = vim.api.nvim_get_current_buf()
   end
 
-  -- params for the request
+  -- Params for the request
   local params = {
     command = "_typescript.organizeImports",
     arguments = { vim.api.nvim_buf_get_name(bufnr) },
@@ -17,7 +19,50 @@ local function organize_imports(bufnr)
   vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", params, 500)
 end
 
-return {
+--- Create commands and keymaps
+---@param client vim.lsp.Client
+---@param bufnr number
+---@return nil
+local function create_ts_commands(client, bufnr)
+  local map = vim.keymap.set
+
+  -- Create command to organize imports
+  vim.api.nvim_buf_create_user_command(bufnr, "OrganizeImports", function()
+    organize_imports(bufnr)
+  end, { desc = "Organize imports using tsserver" })
+
+  map("n", "<leader>or", function()
+    organize_imports(bufnr)
+  end, {
+    desc = "Organize imports",
+    buffer = bufnr,
+  })
+
+  -- Source.* code actions only show up with context.only
+  vim.api.nvim_buf_create_user_command(bufnr, "LspTypescriptSourceAction", function()
+    local kinds = client.server_capabilities.codeActionProvider
+        and client.server_capabilities.codeActionProvider.codeActionKinds
+      or {}
+    local source_kinds = vim.tbl_filter(function(kind)
+      return vim.startswith(kind, "source.")
+    end, kinds)
+
+    vim.lsp.buf.code_action({
+      context = {
+        only = source_kinds,
+        diagnostics = vim.diagnostic.get(bufnr),
+      },
+    })
+  end, { desc = "Trigger tsserver source actions" })
+
+  map("n", "<leader>ts", ":LspTypescriptSourceAction<CR>", {
+    desc = "TypeScript source actions",
+  })
+end
+
+--- Typescript language server configuration
+---@type vim.lsp.Config
+local config = {
   init_options = {
     hostInfo = "neovim",
   },
@@ -40,7 +85,7 @@ return {
     "package.json",
   },
   handlers = {
-    -- handle rename request for certain code actions like extracting functions / types
+    -- Handle rename request for certain code actions like extracting functions / types
     ["_typescript.rename"] = function(_, result, ctx)
       local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
       vim.lsp.util.show_document({
@@ -68,30 +113,11 @@ return {
       end,
     })
 
-    -- ts_ls provides `source.*` code actions that apply to the whole file. These only appear in
-    -- `vim.lsp.buf.code_action()` if specified in `context.only`.
-    vim.api.nvim_buf_create_user_command(0, "LspTypescriptSourceAction", function()
-      local source_actions = vim.tbl_filter(function(action)
-        return vim.startswith(action, "source.")
-      end, client.server_capabilities.codeActionProvider.codeActionKinds)
-
-      vim.lsp.buf.code_action({
-        context = {
-          only = source_actions,
-          diagnostics = vim.diagnostic.get(0),
-        },
-      })
-    end, {})
-
-    -- TODO: Refactor this
-    vim.api.nvim_buf_create_user_command(bufnr, "OrganizeImports", function()
-      organize_imports(bufnr)
-    end, { desc = "Organize imports" })
-    vim.keymap.set("n", "<leader>or", function()
-      organize_imports(bufnr)
-    end, { desc = "Organize imports using tsserver", buffer = bufnr })
+    create_ts_commands(client, bufnr)
 
     -- Trigger diagnostics across workspace
     require("utils.lsp_diagnostics_loader").trigger_workspace_diagnostics(client, bufnr)
   end,
 }
+
+return config
