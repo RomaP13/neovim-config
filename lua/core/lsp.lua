@@ -13,12 +13,34 @@ local CONFIG = {
   },
 }
 
--- Initialize LSP servers
+--- Initialize LSP servers
+---@return nil
 local function setup_servers()
   vim.lsp.enable(CONFIG.servers)
 end
 
--- Enhanced hover with borders
+--- Restart LSP client for the current file
+---@return nil
+local function restart_lsp()
+  local filetype = vim.bo.filetype
+  local lsp = CONFIG.filetype_to_lsp[filetype]
+  if not lsp then
+    vim.notify("LSP client not found for filetype " .. filetype, vim.log.levels.WARN)
+    return
+  end
+
+  -- Stop and restart LSP client
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    if client.name == lsp then
+      client:stop(true)
+    end
+  end
+  vim.cmd("edit")
+  vim.notify("LSP client " .. lsp .. " was stopped", vim.log.levels.INFO)
+end
+
+--- Enhanced hover with borders
+---@return function
 local function create_hover_handler()
   return function(opts)
     opts = opts or {}
@@ -28,7 +50,8 @@ local function create_hover_handler()
   end
 end
 
--- Enhanced diagnostic float with borders
+--- Enhanced diagnostic float with borders
+---@return function
 local function create_diagnostic_float_handler()
   return function(opts)
     opts = opts or {}
@@ -38,7 +61,8 @@ local function create_diagnostic_float_handler()
   end
 end
 
--- Diagnostic configuration
+--- Diagnostic configuration
+---@return nil
 local function setup_diagnostics()
   vim.diagnostic.config({
     underline = true,
@@ -56,7 +80,9 @@ local function setup_diagnostics()
   })
 end
 
--- Diagnostic navigation helpers
+--- Diagnostic navigation helpers
+---@param direction number
+---@return function
 local function diagnostic_jump(direction)
   return function()
     vim.diagnostic.jump({
@@ -66,7 +92,16 @@ local function diagnostic_jump(direction)
   end
 end
 
--- Setup keymaps
+--- Create user commands
+---@return nil
+local function setup_commands()
+  vim.api.nvim_create_user_command("LspRestart", restart_lsp, {
+    desc = "Restart LSP client for current filetype",
+  })
+end
+
+--- Setup keymaps
+---@return nil
 local function setup_keymaps()
   local map = vim.keymap.set
   local hover_handler = create_hover_handler()
@@ -111,9 +146,12 @@ local function setup_keymaps()
   })
 end
 
+--- Setup LSP
+---@return nil
 function M.setup()
   setup_servers()
   setup_diagnostics()
+  setup_commands()
   setup_keymaps()
 end
 
