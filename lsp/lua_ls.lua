@@ -3,9 +3,7 @@ local lsp_cmd = require("utils.lsp_cmd")
 --- Lua language server configuration
 ---@type vim.lsp.Config
 local config = {
-  cmd = {
-    vim.fn.expand("~/.local/share/nvim/mason/bin/lua-language-server"),
-  },
+  cmd = lsp_cmd.find_cmd("lua_ls", "lua-language-server"),
   filetypes = {
     "lua",
   },

@@ -3,10 +3,7 @@ local lsp_cmd = require("utils.lsp_cmd")
 --- Pyright language server configuration
 ---@type vim.lsp.Config
 local config = {
-  cmd = {
-    vim.fn.expand("~/.local/share/nvim/mason/bin/pyright-langserver"),
-    "--stdio",
-  },
+  cmd = lsp_cmd.find_cmd("pyright", "pyright-langserver", { "--stdio" }),
   filetypes = {
     "python",
   },
