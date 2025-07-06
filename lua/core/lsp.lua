@@ -1,57 +1,122 @@
-vim.lsp.enable({
-  "lua_ls",
-  "pyright",
-  "ts_ls",
-})
+local M = {}
 
--- Custom hover and diagnostic float for adding borders
-local _border = "rounded"
-local function hover(_opts)
-  _opts = _opts or {}
-  return vim.lsp.buf.hover(vim.tbl_deep_extend("force", _opts, {
-    border = _border,
-  }))
-end
-
-local function diagnostic_float(_opts)
-  _opts = _opts or {}
-  return vim.diagnostic.open_float(vim.tbl_deep_extend("force", _opts, {
-    border = _border,
-  }))
-end
-
-vim.diagnostic.config({
-  underline = true,
-  virtual_text = {
-    prefix = function(diagnostic)
-      if diagnostic.user_data and diagnostic.user_data.has_fix then
-        return "💡"
-      end
-      return "■"
-    end,
+local CONFIG = {
+  border = "rounded",
+  servers = { "lua_ls", "pyright", "ts_ls" },
+  filetype_to_lsp = {
+    python = "pyright",
+    lua = "lua_ls",
+    typescript = "ts_ls",
+    javascript = "ts_ls",
+    javascriptreact = "ts_ls",
+    typescriptreact = "ts_ls",
   },
-  signs = true,
-  update_in_insert = false,
-  severity_sort = true,
-})
+}
 
--- Keymaps
-local map = vim.keymap.set
+-- Initialize LSP servers
+local function setup_servers()
+  vim.lsp.enable(CONFIG.servers)
+end
 
-map("n", "<leader>vl", ":checkhealth vim.lsp<CR>", {})
+-- Enhanced hover with borders
+local function create_hover_handler()
+  return function(opts)
+    opts = opts or {}
+    return vim.lsp.buf.hover(vim.tbl_deep_extend("force", opts, {
+      border = CONFIG.border,
+    }))
+  end
+end
 
-map("n", "K", hover, { desc = "Show hover documentation" })
-map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-map("n", "gr", vim.lsp.buf.references, { desc = "Show references" })
-map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+-- Enhanced diagnostic float with borders
+local function create_diagnostic_float_handler()
+  return function(opts)
+    opts = opts or {}
+    return vim.diagnostic.open_float(vim.tbl_deep_extend("force", opts, {
+      border = CONFIG.border,
+    }))
+  end
+end
 
-map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Show available code actions" })
-map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
+-- Diagnostic configuration
+local function setup_diagnostics()
+  vim.diagnostic.config({
+    underline = true,
+    virtual_text = {
+      prefix = function(diagnostic)
+        if diagnostic.user_data and diagnostic.user_data.has_fix then
+          return "💡"
+        end
+        return "■"
+      end,
+    },
+    signs = true,
+    update_in_insert = false,
+    severity_sort = true,
+  })
+end
 
-map("n", "<leader>of", diagnostic_float, { desc = "Open diagnostic float" })
-map("n", "[d", function()
-  vim.diagnostic.jump({ count = -1, float = { border = _border } })
-end, { desc = "Go to previous diagnostic" })
-map("n", "]d", function()
-  vim.diagnostic.jump({ count = 1, float = { border = _border } })
-end, { desc = "Go to next diagnostic" })
+-- Diagnostic navigation helpers
+local function diagnostic_jump(direction)
+  return function()
+    vim.diagnostic.jump({
+      count = direction,
+      float = { border = CONFIG.border },
+    })
+  end
+end
+
+-- Setup keymaps
+local function setup_keymaps()
+  local map = vim.keymap.set
+  local hover_handler = create_hover_handler()
+  local diagnostic_float_handler = create_diagnostic_float_handler()
+
+  -- LSP health check
+  map("n", "<leader>vl", ":checkhealth vim.lsp<CR>", {
+    desc = "Check LSP health",
+  })
+
+  -- Documentation and navigation
+  map("n", "K", hover_handler, {
+    desc = "Show hover documentation",
+  })
+  map("n", "gd", vim.lsp.buf.definition, {
+    desc = "Go to definition",
+  })
+  map("n", "gr", vim.lsp.buf.references, {
+    desc = "Show references",
+  })
+  map("n", "gi", vim.lsp.buf.implementation, {
+    desc = "Go to implementation",
+  })
+
+  -- Code actions and refactoring
+  map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {
+    desc = "Show available code actions",
+  })
+  map("n", "<leader>rn", vim.lsp.buf.rename, {
+    desc = "Rename symbol",
+  })
+
+  -- Diagnostics
+  map("n", "<leader>of", diagnostic_float_handler, {
+    desc = "Open diagnostic float",
+  })
+  map("n", "[d", diagnostic_jump(-1), {
+    desc = "Go to previous diagnostic",
+  })
+  map("n", "]d", diagnostic_jump(1), {
+    desc = "Go to next diagnostic",
+  })
+end
+
+function M.setup()
+  setup_servers()
+  setup_diagnostics()
+  setup_keymaps()
+end
+
+M.setup()
+
+return M
