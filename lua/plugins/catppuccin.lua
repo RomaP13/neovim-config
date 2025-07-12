@@ -16,8 +16,8 @@ return {
           Comment = { fg = "#808A9F" },
 
           -- Custom highlights for blink-cmp borders
-          BlinkCmpMenuBorder = { fg = colors.blue }, -- Completion menu border
-          BlinkCmpDocBorder = { fg = colors.blue }, -- Documentation border
+          BlinkCmpMenuBorder = { fg = colors.blue },          -- Completion menu border
+          BlinkCmpDocBorder = { fg = colors.blue },           -- Documentation border
           BlinkCmpSignatureHelpBorder = { fg = colors.blue }, -- Signature help border
 
           -- Custom highlights for diffview
@@ -37,7 +37,6 @@ return {
         mason = true,
         dap = true,
         dap_ui = true,
-        nvimtree = true,
         treesitter = true,
         ufo = true,
         telescope = {
