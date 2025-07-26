@@ -32,6 +32,7 @@ return {
         blink_cmp = true,
         diffview = true,
         fidget = true,
+        fzf = true,
         gitsigns = true,
         markdown = true,
         mason = true,
