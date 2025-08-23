@@ -4,7 +4,10 @@ return {
     local config = require("lualine")
 
     local function show_codeium_status()
-      return "AI: " .. vim.fn["codeium#GetStatusString"]()
+      if vim.fn["codeium#GetStatusString"]() == "OFF" then
+        return "󱚧"
+      end
+      return "󰚩"
     end
 
     local function macro_recording()
@@ -19,13 +22,31 @@ return {
     config.setup({
       options = {
         theme = "catppuccin",
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
       },
       sections = {
         lualine_a = { "mode" },
-        lualine_b = { "branch", "diff", "diagnostics" },
+        lualine_b = {
+          { "diff" },
+
+          -- Buffer diagnostics
+          {
+            "diagnostics",
+            sources = { "nvim_diagnostic" },
+          },
+        },
         lualine_c = { "filename" },
         lualine_x = { show_codeium_status, "encoding", "fileformat", "filetype" },
-        lualine_y = { "selectioncount", "searchcount", "progress" },
+        lualine_y = {
+          {
+            "diagnostics",
+            sources = { "nvim_workspace_diagnostic" },
+          },
+          { "selectioncount" },
+          { "searchcount" },
+          { "progress" }
+        },
         lualine_z = { macro_recording, "location" },
       },
     })
