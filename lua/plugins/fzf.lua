@@ -10,6 +10,32 @@ local function get_priority_files()
   return files
 end
 
+-- Custom function to search for phrases
+local function search_phrase()
+  local input = vim.fn.input("Enter the phrase: ")
+  if input ~= "" then
+    -- Replace spaces between words with the regex pattern \s+\w*\s*
+    local query = input:gsub(" ", "\\s+\\w*\\s*")
+    -- Enclose the entire query in double quotes
+    query = '"' .. query .. '"'
+
+    -- Get priority files and format them for ripgrep
+    local priority_files = get_priority_files()
+    local files_args = ""
+    for _, file in ipairs(priority_files) do
+      files_args = files_args .. " " .. vim.fn.shellescape(file)
+    end
+
+    -- Perform the search using fzf-lua grep
+    require("fzf-lua").grep({
+      search = query,
+      cmd = "rg --color=never --hidden --follow --sort=path --line-number --column -U " .. query .. files_args,
+    })
+  else
+    vim.notify("No phrase entered.")
+  end
+end
+
 return {
   "ibhagwan/fzf-lua",
   dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -73,9 +99,10 @@ return {
     { "<leader>fr", ":FzfLua resume<CR>", desc = "Resume", silent = true },
     { "<leader>fz", ":FzfLua builtin<CR>", desc = "Builtin", silent = true },
     { "<leader>fh", ":FzfLua helptags<CR>", desc = "Help tags", silent = true },
-    { "<leader>ch", ":FzfLua command_history<CR>", desc = "Command history", silent = true },
     { "<leader>km", ":FzfLua keymaps<CR>", desc = "Keymaps", silent = true },
     { "<leader>sg", ":FzfLua spell_suggest<CR>", desc = "Spell suggest", silent = true },
+
+    { "<leader>fv", search_phrase, noremap = true, silent = true },
 
     -- Custom live grep with priority files
     {
@@ -83,7 +110,7 @@ return {
       function()
         require("fzf-lua").live_grep({
           search_paths = get_priority_files(),
-          rg_opts = [[--color=never --hidden --follow --sort=path]],
+          rg_opts = [[--color=never --hidden --follow --sort=path --line-number --column]],
         })
       end,
       desc = "Live grep priority files",
