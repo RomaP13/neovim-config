@@ -89,6 +89,11 @@ return {
             name = "obsidian_tags",
             module = "blink.compat.source",
           },
+          path = {
+            opts = {
+              show_hidden_files_by_default = true,
+            },
+          },
         },
       },
     },

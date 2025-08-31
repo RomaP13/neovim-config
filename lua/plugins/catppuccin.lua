@@ -8,6 +8,10 @@ return {
     config.setup({
       flavour = "macchiato",
       transparent_background = true,
+      float = {
+        transparent = true,
+        solid = false,
+      },
 
       custom_highlights = function(colors)
         return {
@@ -32,12 +36,12 @@ return {
         blink_cmp = true,
         diffview = true,
         fidget = true,
+        fzf = true,
         gitsigns = true,
         markdown = true,
         mason = true,
         dap = true,
         dap_ui = true,
-        nvimtree = true,
         treesitter = true,
         ufo = true,
         telescope = {

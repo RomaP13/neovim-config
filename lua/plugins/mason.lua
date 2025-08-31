@@ -27,6 +27,9 @@ return {
         -- js and ts stuff
         "typescript-language-server",
         "prettier",
+
+        -- markdown stuff
+        "markdown-oxide",
       },
 
       -- If set to true this will check each tool for updates
