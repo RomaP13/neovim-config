@@ -8,6 +8,10 @@ return {
     config.setup({
       flavour = "macchiato",
       transparent_background = true,
+      float = {
+        transparent = true,
+        solid = false,
+      },
 
       custom_highlights = function(colors)
         return {
@@ -16,8 +20,8 @@ return {
           Comment = { fg = "#808A9F" },
 
           -- Custom highlights for blink-cmp borders
-          BlinkCmpMenuBorder = { fg = colors.blue },          -- Completion menu border
-          BlinkCmpDocBorder = { fg = colors.blue },           -- Documentation border
+          BlinkCmpMenuBorder = { fg = colors.blue }, -- Completion menu border
+          BlinkCmpDocBorder = { fg = colors.blue }, -- Documentation border
           BlinkCmpSignatureHelpBorder = { fg = colors.blue }, -- Signature help border
 
           -- Custom highlights for diffview
