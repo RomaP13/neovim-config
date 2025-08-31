@@ -20,6 +20,11 @@ return {
       },
       prettier = {
         command = vim.fn.stdpath("data") .. "/mason/bin/prettier",
+        condition = function(ctx)
+          local buf = tonumber(ctx.buf) or 0
+          local filename = vim.api.nvim_buf_get_name(buf)
+          return not filename:match("lazy%-lock%.json$")
+        end,
       },
     },
   },
