@@ -28,7 +28,7 @@ return {
 
   opts = {
     options = {
-      theme = "catppuccin",
+      theme = "tokyonight",
       component_separators = { left = "", right = "" },
       section_separators = { left = "", right = "" },
     },
