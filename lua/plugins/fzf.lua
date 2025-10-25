@@ -95,6 +95,9 @@ return {
     { "<leader>gf", ":FzfLua git_files<CR>", desc = "Git files", silent = true },
     { "<leader>gs", ":FzfLua git_status<CR>", desc = "Git status", silent = true },
 
+    -- LSP / Diagnostics
+    { "<leader>ca", ":FzfLua lsp_code_actions<CR>", desc = "Code actions", silent = true },
+
     -- Misc
     { "<leader>fr", ":FzfLua resume<CR>", desc = "Resume", silent = true },
     { "<leader>fz", ":FzfLua builtin<CR>", desc = "Builtin", silent = true },
@@ -126,5 +129,6 @@ return {
       },
     }
     require("fzf-lua").setup(opts)
+    require("fzf-lua").register_ui_select()
   end,
 }
