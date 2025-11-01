@@ -1,3 +1,5 @@
+local theme = require("core.theme")
+
 local function get_priority_files()
   local path = vim.fn.expand("~/.config/nvim/rg_priority.txt") -- File with prioritized paths
   local files = {}
@@ -103,6 +105,7 @@ return {
     { "<leader>fz", ":FzfLua builtin<CR>", desc = "Builtin", silent = true },
     { "<leader>fh", ":FzfLua helptags<CR>", desc = "Help tags", silent = true },
     { "<leader>km", ":FzfLua keymaps<CR>", desc = "Keymaps", silent = true },
+    { "<leader>ch", ":FzfLua colorschemes<CR>", desc = "Colorschemes", silent = true },
     { "<leader>sg", ":FzfLua spell_suggest<CR>", desc = "Spell suggest", silent = true },
 
     { "<leader>fv", search_phrase, noremap = true, silent = true },
@@ -122,6 +125,12 @@ return {
   },
   config = function(_, opts)
     local actions = require("fzf-lua").actions
+
+    opts.colorschemes = opts.colorschemes or {}
+    opts.colorschemes.actions = {
+      ["enter"] = theme.set_global_colorscheme,
+    }
+
     opts.actions = {
       files = {
         ["enter"] = actions.file_edit_or_qf,
