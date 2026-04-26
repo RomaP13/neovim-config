@@ -9,7 +9,21 @@ map("c", "<C-H>", "<C-w>")
 -- Save file forcefully even when 'readonly' is set or
 -- there is another reason why writing was refused.
 map("n", "<C-s>", "<cmd>w!<CR>", { desc = "File Save" })
-map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "File Copy whole" })
+
+-- Remap recording macro
+map("n", "<leader>q", "q")
+map("n", "q", "<Nop>")
+
+-- Copy entire file
+map("n", "<leader>ya", function()
+  local filepath = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.") -- Get path relative to CWD
+  local content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n") -- Get all lines in the current buffer
+  local full_copy = ("%s:\n%s"):format(filepath, content) -- Sets the system clipboard
+  vim.fn.setreg("+", full_copy) -- Sets the system clipboard
+  vim.notify("Copied: " .. filepath)
+end, { desc = "Copy file path and content to clipboard" })
+
+map("n", "<leader>va", "ggVG", { desc = "Select entire file" })
 
 -- Remove search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -58,8 +72,8 @@ map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
 map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
 
 -- Quickfix
-map("n", "<C-]>", ":cnext<CR>", { silent = true })
-map("n", "<C-[>", ":cprev<CR>", { silent = true })
+map("n", "<M-]>", ":cnext<CR>", { silent = true })
+map("n", "<M-[>", ":cprev<CR>", { silent = true })
 map("n", "<leader>co", ":copen<CR>", { silent = true })
 map("n", "<leader>cc", ":cclose<CR>", { silent = true })
 

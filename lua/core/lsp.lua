@@ -128,9 +128,9 @@ local function setup_keymaps()
   })
 
   -- Code actions and refactoring
-  map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {
-    desc = "Show available code actions",
-  })
+  -- map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {
+  --   desc = "Show available code actions",
+  -- })
   map("n", "<leader>rn", vim.lsp.buf.rename, {
     desc = "Rename symbol",
   })

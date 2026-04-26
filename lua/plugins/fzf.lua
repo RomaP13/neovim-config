@@ -1,3 +1,5 @@
+local theme = require("core.theme")
+
 local function get_priority_files()
   local path = vim.fn.expand("~/.config/nvim/rg_priority.txt") -- File with prioritized paths
   local files = {}
@@ -95,11 +97,15 @@ return {
     { "<leader>gf", ":FzfLua git_files<CR>", desc = "Git files", silent = true },
     { "<leader>gs", ":FzfLua git_status<CR>", desc = "Git status", silent = true },
 
+    -- LSP / Diagnostics
+    { "<leader>ca", ":FzfLua lsp_code_actions<CR>", desc = "Code actions", silent = true },
+
     -- Misc
     { "<leader>fr", ":FzfLua resume<CR>", desc = "Resume", silent = true },
     { "<leader>fz", ":FzfLua builtin<CR>", desc = "Builtin", silent = true },
     { "<leader>fh", ":FzfLua helptags<CR>", desc = "Help tags", silent = true },
     { "<leader>km", ":FzfLua keymaps<CR>", desc = "Keymaps", silent = true },
+    { "<leader>ch", ":FzfLua colorschemes<CR>", desc = "Colorschemes", silent = true },
     { "<leader>sg", ":FzfLua spell_suggest<CR>", desc = "Spell suggest", silent = true },
 
     { "<leader>fv", search_phrase, noremap = true, silent = true },
@@ -119,6 +125,12 @@ return {
   },
   config = function(_, opts)
     local actions = require("fzf-lua").actions
+
+    opts.colorschemes = opts.colorschemes or {}
+    opts.colorschemes.actions = {
+      ["enter"] = theme.set_global_colorscheme,
+    }
+
     opts.actions = {
       files = {
         ["enter"] = actions.file_edit_or_qf,
@@ -126,5 +138,6 @@ return {
       },
     }
     require("fzf-lua").setup(opts)
+    require("fzf-lua").register_ui_select()
   end,
 }
