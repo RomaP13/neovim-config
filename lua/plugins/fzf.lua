@@ -1,41 +1,28 @@
 local theme = require("core.theme")
-
 local function get_priority_files()
-  local path = vim.fn.expand("~/.config/nvim/rg_priority.txt") -- File with prioritized paths
+  local config_path = vim.fn.expand("~/.config/nvim/rg_priority.txt") -- File with prioritized paths
+
+  local base_dir = vim.fn.expand("~/md_books")
+
   local files = {}
 
-  -- Read the file line by line
-  for line in io.lines(path) do
-    table.insert(files, line)
+  -- Use io.open for better error handling
+  local file = io.open(config_path, "r")
+  if not file then
+    vim.notify("Could not open rg_priority.txt: " .. config_path, vim.log.levels.ERROR)
+    return files
   end
+
+  -- Read the file line by line
+  for line in file:lines() do
+    -- Prepend the base directory to each line
+    if line ~= "" then -- Avoid adding empty lines
+      table.insert(files, base_dir .. "/" .. line)
+    end
+  end
+  file:close()
 
   return files
-end
-
--- Custom function to search for phrases
-local function search_phrase()
-  local input = vim.fn.input("Enter the phrase: ")
-  if input ~= "" then
-    -- Replace spaces between words with the regex pattern \s+\w*\s*
-    local query = input:gsub(" ", "\\s+\\w*\\s*")
-    -- Enclose the entire query in double quotes
-    query = '"' .. query .. '"'
-
-    -- Get priority files and format them for ripgrep
-    local priority_files = get_priority_files()
-    local files_args = ""
-    for _, file in ipairs(priority_files) do
-      files_args = files_args .. " " .. vim.fn.shellescape(file)
-    end
-
-    -- Perform the search using fzf-lua grep
-    require("fzf-lua").grep({
-      search = query,
-      cmd = "rg --color=never --hidden --follow --sort=path --line-number --column -U " .. query .. files_args,
-    })
-  else
-    vim.notify("No phrase entered.")
-  end
 end
 
 return {
@@ -108,15 +95,13 @@ return {
     { "<leader>ch", ":FzfLua colorschemes<CR>", desc = "Colorschemes", silent = true },
     { "<leader>sg", ":FzfLua spell_suggest<CR>", desc = "Spell suggest", silent = true },
 
-    { "<leader>fv", search_phrase, noremap = true, silent = true },
-
     -- Custom live grep with priority files
     {
       "<leader>fi",
       function()
         require("fzf-lua").live_grep({
           search_paths = get_priority_files(),
-          rg_opts = [[--color=never --hidden --follow --sort=path --line-number --column]],
+          rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
         })
       end,
       desc = "Live grep priority files",
