@@ -1,13 +1,19 @@
 return {
   {
     "mason-org/mason.nvim",
+
+    ---@module "mason"
+    ---@type MasonSettings
     opts = {
+      firewall = {
+        enabled = true,
+      },
       ui = {
-        border = "rounded",
+        backdrop = 100,
       },
     },
     keys = {
-      { "<leader>im", ":Mason<CR>", desc = "Mason" },
+      { "<leader>im", "<cmd>Mason<CR>", desc = "Open Mason" },
     },
   },
   {
@@ -15,6 +21,9 @@ return {
     dependencies = {
       "mason-org/mason.nvim",
     },
+
+    ---@module "mason-tool-installer"
+    ---@type MasonToolInstallerSettings
     opts = {
       ensure_installed = {
         -- lua stuff
@@ -32,18 +41,10 @@ return {
         "markdown-oxide",
       },
 
-      -- If set to true this will check each tool for updates
       auto_update = false,
-
-      -- Automatically install / update on startup
       run_on_start = true,
-
-      -- Set a delay (in ms) before the installation starts
-      start_delay = 3000, -- 3 second delay
-
-      -- Only attempt to install if 'debounce_hours' number of hours has
-      -- elapsed since the last time Neovim was started
-      debounce_hours = nil,
+      start_delay = 3000,
+      debounce_hours = 24,
 
       integrations = {
         ["mason-lspconfig"] = false,
