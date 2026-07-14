@@ -1,12 +1,17 @@
 return {
-  "nvim-web-devicons",
-  config = function()
+  "nvim-tree/nvim-web-devicons",
+  init = function()
     local devicons = require("nvim-web-devicons")
     local cache = {}
 
     local function get_custom_ext(name)
-      if cache[name] then
-        return cache[name]
+      if not name then
+        return nil
+      end
+
+      local cached = cache[name]
+      if cached ~= nil then
+        return cached
       end
 
       local ext
@@ -23,21 +28,16 @@ return {
     end
 
     local get_icon = devicons.get_icon
+    ---@diagnostic disable-next-line: duplicate-set-field
     devicons.get_icon = function(name, ext, opts)
       return get_icon(name, get_custom_ext(name) or ext, opts)
     end
 
     local get_icon_colors = devicons.get_icon_colors
+    ---@diagnostic disable-next-line: duplicate-set-field
     devicons.get_icon_colors = function(name, ext, opts)
       return get_icon_colors(name, get_custom_ext(name) or ext, opts)
     end
-
-    -- devicons.setup {
-    --   override = {
-    --     ["Dockerfile"] = { icon = "", color = "#0db7ed", name = "Dockerfile" },
-    --     ["docker-compose.yml"] = { icon = "", color = "#0db7ed", name = "DockerCompose" },
-    --     ["env"] = { icon = "", color = "#faf743", name = "DotEnv" }, -- Icon for .env files
-    --   },
-    -- }
   end,
+  opts = {},
 }
