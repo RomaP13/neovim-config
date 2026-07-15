@@ -2,21 +2,40 @@ return {
   "nvim-neotest/neotest",
   dependencies = {
     "nvim-neotest/nvim-nio",
+    "nvim-neotest/neotest-python",
     "nvim-lua/plenary.nvim",
-    -- "antoinemadec/FixCursorHold.nvim",
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-neotest/neotest-python"
+    "antoinemadec/FixCursorHold.nvim",
   },
-  keys = {
-    { "<leader>nt", ":lua require('neotest').run.run()<CR>", desc = "Run nearest test", silent = true },
-    { "<leader>nf", ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", desc = "Run tests in current file", silent = true },
-  },
-  config = function()
-    local config = require("neotest")
-    config.setup({
+
+  opts = function()
+    ---@module "neotest"
+    ---@type neotest.Config
+    ---@diagnostic disable-next-line: missing-fields
+    local opts = {
       adapters = {
-        require("neotest-python")
+        require("neotest-python")({
+          runner = "pytest",
+        }),
       },
-    })
-  end
+    }
+
+    return opts
+  end,
+
+  keys = {
+    {
+      "<leader>nt",
+      function()
+        require("neotest").run.run()
+      end,
+      desc = "Neotest: Run the nearest test",
+    },
+    {
+      "<leader>nf",
+      function()
+        require("neotest").run.run(vim.fn.expand("%"))
+      end,
+      desc = "Neotest: Run all tests in the current file",
+    },
+  },
 }

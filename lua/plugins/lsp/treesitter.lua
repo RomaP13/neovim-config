@@ -1,56 +1,78 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  dependencies = {
-    "fei6409/log-highlight.nvim",
-  },
+  branch = "main",
+  lazy = false,
   build = ":TSUpdate",
   config = function()
-    local config = require("nvim-treesitter.configs")
-    config.setup({
-      ensure_installed = {
-        -- Lua stuff
+    local nvim_treesitter = require("nvim-treesitter")
+    nvim_treesitter.setup({
+      -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
+      install_dir = vim.fn.stdpath("data") .. "/site",
+    })
+
+    -- Auto-install
+    nvim_treesitter.install({
+      -- Lua stuff
+      "lua",
+      "luadoc",
+
+      -- Vim stuff
+      "vim",
+      "vimdoc",
+
+      -- Programming languages
+      "bash",
+      "c",
+      "python",
+      "javascript",
+      "typescript",
+
+      -- Markdown and documentation
+      "markdown",
+      "markdown_inline",
+      "json",
+      "yaml",
+
+      -- Web development
+      "css",
+      "html",
+
+      -- Other stuff
+      "dockerfile",
+      "make",
+      "query",
+    })
+
+    -- Enable Treesitter features using native Neovim autocommands
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = {
         "lua",
-        "luadoc",
-
-        -- Vim stuff
         "vim",
-        "vimdoc",
-
-        -- Programming languages
-        "bash",
+        "sh",
         "c",
         "python",
         "javascript",
         "typescript",
-
-        -- Makrup and documentation
         "markdown",
-        "markdown_inline",
         "json",
-        "jsonc",
-        "yaml",
-
-        -- Web development
         "css",
         "html",
-        "htmldjango",
-
-        -- Other stuff
         "dockerfile",
-        "make",
-        "query",
       },
+      callback = function()
+        -- Highlighting provided by core Neovim
+        pcall(vim.treesitter.start)
 
-      highlight = {
-        enable = true,
-        use_languagetree = true,
-      },
+        -- Folds provided by core Neovim
+        vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        vim.wo.foldmethod = "expr"
 
-      indent = {
-        enable = true,
-      },
+        -- Indentation provided by nvim-treesitter module
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
     })
 
+    -- Set up custom filetype mappings and language registers
     vim.treesitter.language.register("bash", "dotenv")
 
     -- Filetype detection

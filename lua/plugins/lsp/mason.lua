@@ -31,7 +31,7 @@ return {
         "stylua",
 
         -- python stuff
-        "pyright",
+        "basedpyright",
 
         -- js and ts stuff
         "typescript-language-server",
