@@ -1,87 +1,90 @@
 local map = vim.keymap.set
 
--- Delete a word by pressing Ctrl + Backspace
-map("i", "<C-BS>", "<C-w>")
-map("c", "<C-BS>", "<C-w>")
-map("i", "<C-H>", "<C-w>")
-map("c", "<C-H>", "<C-w>")
+----------------------------------------------------------------------------------------------------
+-- General
+----------------------------------------------------------------------------------------------------
 
--- Save file forcefully even when 'readonly' is set or
--- there is another reason why writing was refused.
-map("n", "<C-s>", "<cmd>w!<CR>", { desc = "File Save" })
+map("n", "<C-s>", "<cmd>w!<CR>", { desc = "Save file" })
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+map("i", "jk", "<Esc>", { desc = "Exit insert mode" })
 
--- Remap recording macro
-map("n", "<leader>q", "q")
+----------------------------------------------------------------------------------------------------
+-- Macros
+----------------------------------------------------------------------------------------------------
+
+map("n", "<leader>q", "q", { desc = "Record macro" })
 map("n", "q", "<Nop>")
 
--- Copy entire file
+----------------------------------------------------------------------------------------------------
+-- Selection & Clipboard
+----------------------------------------------------------------------------------------------------
+
+map("n", "<leader>va", "ggVG", { desc = "Select entire file" })
+
 map("n", "<leader>ya", function()
   local filepath = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.") -- Get path relative to CWD
   local content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n") -- Get all lines in the current buffer
   local full_copy = ("%s:\n%s"):format(filepath, content) -- Sets the system clipboard
   vim.fn.setreg("+", full_copy) -- Sets the system clipboard
-  vim.notify("Copied: " .. filepath)
-end, { desc = "Copy file path and content to clipboard" })
+  vim.notify("Copied: " .. filepath, vim.log.levels.INFO)
+end, { desc = "Copy file path and contents" })
 
-map("n", "<leader>va", "ggVG", { desc = "Select entire file" })
+map({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to the system clipboard" })
 
--- Remove search highlight
-map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+map({ "n", "v" }, "<leader>p", '"+p', { desc = "Paste after cursor from system clipboard" })
+map({ "n", "v" }, "<leader>P", '"+P', { desc = "Paste before cursor from system clipboard" })
 
--- Go to normal mode
-map("i", "jk", "<Esc>")
+map({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
+
+----------------------------------------------------------------------------------------------------
+-- Insert mode
+----------------------------------------------------------------------------------------------------
 
 -- Quick movement in insert mode
-map("i", "<C-k>", "<Up>")
-map("i", "<C-h>", "<Left>")
-map("i", "<C-l>", "<Right>")
-map("i", "<C-j>", "<Down>")
+map("i", "<C-h>", "<Left>", { desc = "Move cursor left" })
+map("i", "<C-j>", "<Down>", { desc = "Move cursor down" })
+map("i", "<C-k>", "<Up>", { desc = "Move cursor up" })
+map("i", "<C-l>", "<Right>", { desc = "Move cursor right" })
+
+----------------------------------------------------------------------------------------------------
+-- Buffers
+----------------------------------------------------------------------------------------------------
 
 -- Buffer navigation
-map("n", "<C-a>", ":bprev<CR>", { noremap = true, silent = true })
-map("n", "<C-d>", ":bnext<CR>", { noremap = true, silent = true })
+map("n", "<leader>bp", "<cmd>bprev<CR>", { desc = "Previous buffer" })
+map("n", "<leader>bn", "<cmd>bnext<CR>", { desc = "Next buffer" })
 
 -- Buffer unloading
-map("n", "<leader>bd", ":bd | bprev<CR>", { silent = true, desc = "Unload buffer and delete it from the buffer list" })
+map("n", "<leader>bd", "<cmd>bd | bprev<CR>", { desc = "Delete current buffer" })
 
--- Window navigation
-map("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-map("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-map("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-map("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+----------------------------------------------------------------------------------------------------
+-- Windows
+----------------------------------------------------------------------------------------------------
 
--- Move line in the visual mode
-map("v", "J", ":m '>+1<CR>gv=gv", { silent = true })
-map("v", "K", ":m '<-2<CR>gv=gv", { silent = true })
+map("n", "<C-h>", "<C-w><C-h>", { desc = "Focus left window" })
+map("n", "<C-j>", "<C-w><C-j>", { desc = "Focus lower window" })
+map("n", "<C-k>", "<C-w><C-k>", { desc = "Focus upper window" })
+map("n", "<C-l>", "<C-w><C-l>", { desc = "Focus right window" })
 
--- Replace all single quotes(') with double(")
-map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", { silent = true })
+----------------------------------------------------------------------------------------------------
+-- Visual mode
+----------------------------------------------------------------------------------------------------
 
--- Yanking to the system clipboard
-map("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
-map("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
+map("v", "J", "<cmd>m '>+1<CR>gv=gv", { desc = "Move selection down" })
+map("v", "K", "<cmd>m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
--- Pasting from the system clipboard
-map("n", "<leader>p", '"+p', { desc = "Paste after cursor from clipboard" })
-map("n", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
-map("v", "<leader>p", '"+p', { desc = "Paste after cursor from clipboard" })
-map("v", "<leader>P", '"+P', { desc = "Paste before cursor from clipboard" })
+----------------------------------------------------------------------------------------------------
+-- Search & Replace
+----------------------------------------------------------------------------------------------------
 
--- Deleting without yanking
-map("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
-map("v", "<leader>d", '"_d', { desc = "Delete without yanking" })
+map("n", "<leader>'", "<cmd>%s/'/\"/g<CR>", { desc = "Replace all single quotes with double quotes" })
 
+----------------------------------------------------------------------------------------------------
 -- Quickfix
-map("n", "<M-]>", ":cnext<CR>", { silent = true })
-map("n", "<M-[>", ":cprev<CR>", { silent = true })
-map("n", "<leader>co", ":copen<CR>", { silent = true })
-map("n", "<leader>cc", ":cclose<CR>", { silent = true })
+----------------------------------------------------------------------------------------------------
 
--- Join selected paragraphs and copy them to the clipboard
-map("v", "<leader>jp", ":lua require('utils.text_utils').join_paragraphs()<CR>", { noremap = true, silent = true })
+map("n", "<M-]>", "<cmd>cnext<CR>", { desc = "Next quickfix item" })
+map("n", "<M-[>", "<cmd>cprev<CR>", { desc = "Previous quickfix item" })
 
--- Notes:
--- Directly calling require('utils.text_utils').join_paragraphs() caused inconsistent behavior,
--- particularly with visual selections not being handled correctly. Using <cmd>lua also led to
--- similar issues, likely due to differences in how visual mode transitions are handled.
--- To ensure reliable behavior, we use :lua to call the function in command-line mode.
+map("n", "<leader>co", "<cmd>copen<CR>", { desc = "Open quickfix list" })
+map("n", "<leader>cc", "<cmd>cclose<CR>", { desc = "Close quickfix list" })
