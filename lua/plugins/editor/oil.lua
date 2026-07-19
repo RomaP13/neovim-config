@@ -54,7 +54,7 @@ return {
           [".bashrc"] = true,
           [".zshrc"] = true,
         }
-        if visible_hidden_files[name] ~= nil then
+        if visible_hidden_files[name] then
           return false -- Don't hide this file
         end
 

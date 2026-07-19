@@ -46,7 +46,7 @@ return {
           local ignored_files = {
             ["lazy-lock.json"] = true,
           }
-          if ignored_files[vim.fs.basename(ctx.filename)] ~= nil then
+          if ignored_files[vim.fs.basename(ctx.filename)] then
             return false -- Don't format this file
           end
 

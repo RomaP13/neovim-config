@@ -1,10 +1,11 @@
 local M = {}
 
--- Function to retrieve the selected lines from the current buffer in visual mode
+--- Retrieves the selected lines from the current buffer in visual mode
+---@return string[]|nil
 M.get_visual_selection = function()
-  local s_start = vim.fn.getpos("'<")                                          -- Get start position of the visual selection
-  local s_end = vim.fn.getpos("'>")                                            -- Get end position of the visual selection
-  local n_lines = math.abs(s_end[2] - s_start[2]) + 1                          -- Calculate the number of selected lines
+  local s_start = vim.fn.getpos("'<") -- Get start position of the visual selection
+  local s_end = vim.fn.getpos("'>") -- Get end position of the visual selection
+  local n_lines = math.abs(s_end[2] - s_start[2]) + 1 -- Calculate the number of selected lines
   local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false) -- Get lines from the buffer
 
   if #lines == 0 then
@@ -25,12 +26,12 @@ M.get_visual_selection = function()
   return lines
 end
 
--- Function to join paragraphs and copy them to the clipboard
+--- Joins paragraphs and copies them to the clipboard
 M.join_paragraphs = function()
   local lines = M.get_visual_selection()
 
   if not lines or #lines == 0 then
-    print("No text selected.")
+    vim.notify("No text selected.")
     return
   end
 
@@ -61,7 +62,7 @@ M.join_paragraphs = function()
   vim.fn.setreg("+", table.concat(processed_lines, "\n\n"))
 
   -- Notify the user that the text has been copied
-  print("Modified selection copied to the system clipboard.")
+  vim.notify("Modified selection copied to the system clipboard.")
 end
 
 return M
