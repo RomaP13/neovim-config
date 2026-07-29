@@ -1,5 +1,10 @@
 local lsp_cmd = require("utils.lsp_cmd")
 
+local cmd = lsp_cmd.find_cmd("ts_ls", "typescript-language-server", { "--stdio" })
+if not cmd then
+  return {}
+end
+
 --- Organize imports
 ---@param bufnr number?
 ---@return nil
@@ -66,7 +71,7 @@ local config = {
   init_options = {
     hostInfo = "neovim",
   },
-  cmd = lsp_cmd.find_cmd("ts_ls", "typescript-language-server", { "--stdio" }),
+  cmd = cmd,
   filetypes = {
     "javascript",
     "javascriptreact",
@@ -111,10 +116,22 @@ local config = {
     })
 
     create_ts_commands(client, bufnr)
-
-    -- Trigger diagnostics across workspace
-    require("utils.lsp_diagnostics_loader").trigger_workspace_diagnostics(client, bufnr)
   end,
+
+  settings = {
+    typescript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayVariableTypeHints = true,
+      },
+    },
+    javascript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+      },
+    },
+  },
 }
 
 return config
