@@ -1,3 +1,5 @@
+local workspace_linter = require("workspace_linter")
+
 local fn = vim.fn
 
 vim.api.nvim_create_augroup("bufcheck", { clear = true })
@@ -21,5 +23,23 @@ vim.api.nvim_create_autocmd("BufReadPost", {
       fn.setpos(".", fn.getpos("'\""))
       vim.cmd("silent! foldopen")
     end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function(args)
+    vim.diagnostic.show(nil, args.buf)
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  callback = function(args)
+    local linter = workspace_linter.get_current_linter(args.buf)
+
+    if not linter then
+      return
+    end
+
+    workspace_linter.run(linter)
   end,
 })
