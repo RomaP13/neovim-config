@@ -25,6 +25,13 @@
 --- List of registered workspace linters
 ---@type WorkspaceLinter[]
 local M = {
+  -- Lua
+  require("workspace_linter.linters.selene"),
+
+  -- Python
+  require("workspace_linter.linters.ruff"),
+  require("workspace_linter.linters.vulture"),
+  require("workspace_linter.linters.deptry"),
 }
 
 return M
