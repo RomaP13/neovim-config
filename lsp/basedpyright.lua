@@ -1,9 +1,14 @@
 local lsp_cmd = require("utils.lsp_cmd")
 
+local cmd = lsp_cmd.find_cmd("basedpyright", "basedpyright-langserver", { "--stdio" })
+if not cmd then
+  return {}
+end
+
 --- BasedPyright language server configuration
 ---@type vim.lsp.Config
 local config = {
-  cmd = lsp_cmd.find_cmd("basedpyright", "basedpyright-langserver", { "--stdio" }),
+  cmd = cmd,
   filetypes = {
     "python",
   },
@@ -19,12 +24,16 @@ local config = {
   settings = {
     basedpyright = {
       disableOrganizeimports = true,
-      disableFormatting = true,
 
       analysis = {
-        typeCheckingMode = "basic",
         diagnosticMode = "workspace",
 
+        inlayHints = {
+          genericTypes = true,
+        },
+
+        -- These options can also be configured in config.
+        -- It's recommended to override them in project.
         diagnosticSeverityOverrides = {
           reportUnusedImport = "none",
           reportUnusedExpression = "none",
@@ -40,6 +49,8 @@ local config = {
           "**/build",
           "**/node_modules",
         },
+
+        typeCheckingMode = "basic", -- It's recommended to use "strict"
       },
     },
   },
