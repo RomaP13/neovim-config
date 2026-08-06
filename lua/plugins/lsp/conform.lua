@@ -5,14 +5,6 @@ return {
   init = function()
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
-      pattern = {
-        "*.lua",
-        "*.json",
-        "*.jsonc",
-        "*.yaml",
-        "*.html",
-        "*.css",
-      },
       callback = function(args)
         require("conform").format({
           bufnr = args.buf,
@@ -27,16 +19,22 @@ return {
   opts = {
     formatters_by_ft = {
       lua = { "stylua" },
+
+      python = { "ruff_format", "ruff_organize_imports" },
+
       javascript = { "prettier" },
       javascriptreact = { "prettier" },
       typescript = { "prettier" },
       typescriptreact = { "prettier" },
+
       html = { "prettier" },
       css = { "prettier" },
+
       json = { "prettier" },
       jsonc = { "prettier" },
       yaml = { "prettier" },
     },
+
     formatters = {
       stylua = {
         command = vim.fn.stdpath("data") .. "/mason/bin/stylua",
