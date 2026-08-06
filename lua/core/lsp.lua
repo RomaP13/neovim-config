@@ -2,7 +2,7 @@ local M = {}
 
 local CONFIG = {
   border = "rounded",
-  servers = { "lua_ls", "basedpyright", "ts_ls", "markdown_oxide" },
+  servers = { "lua_ls", "basedpyright", "ts_ls", "markdown_oxide", "bashls" },
   filetype_to_lsp = {
     python = "basedpyright",
     lua = "lua_ls",
@@ -11,6 +11,7 @@ local CONFIG = {
     javascriptreact = "ts_ls",
     typescriptreact = "ts_ls",
     markdown = "markdown_oxide",
+    bash = "bashls",
   },
 }
 
