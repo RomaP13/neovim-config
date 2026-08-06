@@ -26,19 +26,27 @@ return {
     ---@type MasonToolInstallerSettings
     opts = {
       ensure_installed = {
+        -- bash stuff
+        "bash-language-server", -- LSP
+        "shellcheck", -- Linter
+        "shfmt", -- Formatter
+
         -- lua stuff
-        "lua-language-server",
-        "stylua",
+        "lua-language-server", -- LSP
+        "selene", -- Linter
+        "stylua", -- Formatter
 
         -- python stuff
-        "basedpyright",
+        "basedpyright", -- LSP
+        "ruff", -- Linter and Formatter
+        "vulture", -- Linter
 
         -- js and ts stuff
-        "typescript-language-server",
-        "prettier",
+        "typescript-language-server", -- LSP
+        "prettier", -- Formatter
 
         -- markdown stuff
-        "markdown-oxide",
+        "markdown-oxide", -- LSP
       },
 
       auto_update = false,
