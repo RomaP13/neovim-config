@@ -70,8 +70,8 @@ map("n", "<C-l>", "<C-w><C-l>", { desc = "Focus right window" })
 -- Visual mode
 ----------------------------------------------------------------------------------------------------
 
-map("v", "J", "<cmd>m '>+1<CR>gv=gv", { desc = "Move selection down" })
-map("v", "K", "<cmd>m '<-2<CR>gv=gv", { desc = "Move selection up" })
+map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
 ----------------------------------------------------------------------------------------------------
 -- Search & Replace
@@ -88,3 +88,16 @@ map("n", "<M-[>", "<cmd>cprev<CR>", { desc = "Previous quickfix item" })
 
 map("n", "<leader>co", "<cmd>copen<CR>", { desc = "Open quickfix list" })
 map("n", "<leader>cc", "<cmd>cclose<CR>", { desc = "Close quickfix list" })
+
+----------------------------------------------------------------------------------------------------
+-- Toggles
+----------------------------------------------------------------------------------------------------
+
+map("n", "<leader>tj", function()
+  local word = vim.fn.expand("<cword>")
+  if word == "true" then
+    vim.cmd("normal! ciwfalse")
+  elseif word == "false" then
+    vim.cmd("normal! ciwtrue")
+  end
+end, { desc = "Toggle true/false" })
