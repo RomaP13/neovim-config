@@ -2,6 +2,8 @@ local workspace_linter = require("workspace_linter")
 
 local fn = vim.fn
 
+local view_group = vim.api.nvim_create_augroup("ViewPersistence", { clear = true })
+
 vim.api.nvim_create_augroup("bufcheck", { clear = true })
 
 -- Highlight yanks
@@ -22,6 +24,24 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     if fn.line("'\"") > 0 and fn.line("'\"") <= fn.line("$") then
       fn.setpos(".", fn.getpos("'\""))
       vim.cmd("silent! foldopen")
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWinLeave", {
+  group = view_group,
+  callback = function()
+    if vim.bo.buftype == "" then
+      vim.cmd("silent! mkview")
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  group = view_group,
+  callback = function()
+    if vim.bo.buftype == "" then
+      vim.cmd("silent! loadview")
     end
   end,
 })
