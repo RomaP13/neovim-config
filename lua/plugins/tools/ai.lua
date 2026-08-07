@@ -1,47 +1,93 @@
 return {
-  "Exafunction/windsurf.vim",
-  enabled = true,
-  event = "BufEnter",
-  config = function()
-    local map = vim.keymap.set
+  "monkoose/neocodeium",
+  ft = {
+    "sh",
+    "bash",
+    "zsh",
+    "lua",
+    "python",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "css",
+    "json",
+    "jsonc",
+    "yaml",
+  },
 
-    vim.g.codeium_disable_bindings = 1
+  ---@module "neocodeium"
+  ---@type Options
+  opts = {
+    enabled = true,
+    manual = false,
+    filetypes = {
+      help = false,
+      gitcommit = false,
+      gitrebase = false,
+      ["."] = false,
+    },
+    filter = function(bufnr)
+      local allowed_filetypes = {
+        sh = true,
+        bash = true,
+        zsh = true,
+        lua = true,
+        python = true,
+        javascript = true,
+        javascriptreact = true,
+        typescript = true,
+        typescriptreact = true,
+        html = true,
+        css = true,
+        json = true,
+        jsonc = true,
+        yaml = true,
+      }
+      return allowed_filetypes[vim.bo[bufnr].filetype] == true
+    end,
+  },
 
-    vim.g.codeium_filetypes_disabled_by_default = true
-    vim.g.codeium_filetypes = {
-      lua = true,
-      python = true,
-      javascript = true,
-      typescript = true,
-      markdown = true,
-    }
-
-    vim.api.nvim_create_autocmd("BufEnter", {
-      group = vim.api.nvim_create_augroup("CodeiumMarkdownControl", { clear = true }),
-      callback = function()
-        if vim.bo.filetype == "markdown" then
-          if vim.fn.expand("%:t") ~= "README.md" then
-            vim.cmd("CodeiumDisable")
-          else
-            vim.cmd("CodeiumEnable")
-          end
-        end
+  ---@type LazyKeysSpec[]
+  keys = {
+    {
+      "<C-u>",
+      function()
+        require("neocodeium").accept()
       end,
-    })
-
-    map("i", "<C-u>", function()
-      return vim.fn["codeium#Accept"]()
-    end, { expr = true, silent = true })
-    map("i", "<M-;>", function()
-      return vim.fn["codeium#CycleCompletions"](1)
-    end, { expr = true, silent = true })
-    map("i", "<M-,>", function()
-      return vim.fn["codeium#CycleCompletions"](-1)
-    end, { expr = true, silent = true })
-    map("i", "<c-x>", function()
-      return vim.fn["codeium#Clear"]()
-    end, { expr = true, silent = true })
-
-    map("n", "<leader>ct", ":CodeiumToggle<CR>", { silent = true, desc = "Toggle Codeium" })
-  end,
+      mode = "i",
+      desc = "NeoCodeium: Accept the current suggestion",
+    },
+    {
+      "<M-;>",
+      function()
+        require("neocodeium").cycle(1)
+      end,
+      mode = "i",
+      desc = "NeoCodeium: Cycle suggestions +1",
+    },
+    {
+      "<M-,>",
+      function()
+        require("neocodeium").cycle(-1)
+      end,
+      mode = "i",
+      desc = "NeoCodeium: Cycle suggestions -1",
+    },
+    {
+      "<C-x>",
+      function()
+        require("neocodeium").clear()
+      end,
+      mode = "i",
+      desc = "NeoCodeium: Clear the current suggestion",
+    },
+    {
+      "<leader>ct",
+      "<cmd>NeoCodeium toggle<CR>",
+      mode = "n",
+      desc = "NeoCodeium: Toggle NeoCodeium completion",
+    },
+  },
 }
