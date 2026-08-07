@@ -1,17 +1,17 @@
-local function show_codeium_status()
-  if vim.fn["codeium#GetStatusString"]() == "OFF" then
-    return "󱚧"
+local function show_neocodeium_status()
+  local neocodeium = require("neocodeium")
+  if neocodeium.get_status() == 0 then
+    return "󰚩"
   end
-  return "󰚩"
+  return "󱚧"
 end
 
 local function macro_recording()
   local reg = vim.fn.reg_recording()
   if reg == "" then
     return ""
-  else
-    return "Recording @" .. reg
   end
+  return "Recording @" .. reg
 end
 
 return {
@@ -44,7 +44,7 @@ return {
         },
       },
       lualine_c = { "filename" },
-      lualine_x = { show_codeium_status, "encoding", "fileformat", "filetype" },
+      lualine_x = { show_neocodeium_status, "encoding", "fileformat", "filetype" },
       lualine_y = {
         {
           "diagnostics",
