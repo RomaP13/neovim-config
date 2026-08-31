@@ -26,43 +26,4 @@ M.get_visual_selection = function()
   return lines
 end
 
---- Joins paragraphs and copies them to the clipboard
-M.join_paragraphs = function()
-  local lines = M.get_visual_selection()
-
-  if not lines or #lines == 0 then
-    vim.notify("No text selected.")
-    return
-  end
-
-  local processed_lines = {}
-  local paragraph = {}
-
-  for _, line in ipairs(lines) do
-    -- Strip leading and trailing whitespace like Python's strip()
-    line = string.gsub(line, "^%s*(.-)%s*$", "%1")
-    if line ~= "" then
-      table.insert(paragraph, line)
-    else
-      -- If we encounter an empty line, it marks the end of a paragraph
-      if #paragraph ~= 0 then
-        table.insert(processed_lines, table.concat(paragraph, " "))
-        paragraph = {}
-      end
-    end
-  end
-
-  -- After the loop, check if there's any remaining paragraph
-  -- that needs to be processed
-  if #paragraph ~= 0 then
-    table.insert(processed_lines, table.concat(paragraph, " "))
-  end
-
-  -- Copy the processed lines to the system clipboard
-  vim.fn.setreg("+", table.concat(processed_lines, "\n\n"))
-
-  -- Notify the user that the text has been copied
-  vim.notify("Modified selection copied to the system clipboard.")
-end
-
 return M

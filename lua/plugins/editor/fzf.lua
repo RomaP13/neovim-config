@@ -1,128 +1,160 @@
 local theme = require("core.theme")
-local function get_priority_files()
-  local config_path = vim.fn.expand("~/.config/nvim/rg_priority.txt") -- File with prioritized paths
 
-  local base_dir = vim.fn.expand("~/md_books")
+local fd_excludes =
+  "--hidden --follow --no-ignore --exclude .git --exclude .venv --exclude .ruff_cache --exclude __pycache__ --exclude .pytest_cache"
 
-  local files = {}
-
-  -- Use io.open for better error handling
-  local file = io.open(config_path, "r")
-  if not file then
-    vim.notify("Could not open rg_priority.txt: " .. config_path, vim.log.levels.ERROR)
-    return files
-  end
-
-  -- Read the file line by line
-  for line in file:lines() do
-    -- Prepend the base directory to each line
-    if line ~= "" then -- Avoid adding empty lines
-      table.insert(files, base_dir .. "/" .. line)
-    end
-  end
-  file:close()
-
-  return files
-end
+local rg_excludes =
+  "--hidden --follow --glob '!.git' --glob '!.venv' --glob '!.ruff_cache' --glob '!__pycache__' --glob '!.pytest_cache'"
 
 return {
   "ibhagwan/fzf-lua",
+  event = "VeryLazy",
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  opts = {
-    "hide", -- Enable hide profile for better resume functionality
-    winopts = {
-      preview = {
-        layout = "vertical",
-      },
-    },
-    keymap = {
-      builtin = {
-        ["<M-Esc>"] = "hide",
-        ["<F1>"] = "toggle-help",
-        ["<F2>"] = "toggle-fullscreen",
 
-        -- Only valid with the 'builtin' previewer
-        ["<F3>"] = "toggle-preview-wrap",
-        ["<F4>"] = "toggle-preview",
-
-        -- Rotate preview clockwise/counter-clockwise
-        ["<F5>"] = "toggle-preview-ccw",
-        ["<F6>"] = "toggle-preview-cw",
-
-        -- Preview page up/down
-        ["<M-j>"] = "preview-page-down",
-        ["<M-k>"] = "preview-page-up",
-        ["<M-n>"] = "preview-down",
-        ["<M-p>"] = "preview-up",
-      },
-    },
-    files = {
-      fd_opts = [[--type f --hidden --follow 
-        --exclude .git 
-        --exclude .venv 
-        --exclude .ruff_cache 
-        --exclude __pycache__ 
-        --exclude .pytest_cache]],
-    },
-    git = {
-      files = {
-        cmd = "git ls-files --cached --others --exclude-standard",
-      },
-    },
-  },
-  keys = {
-    -- Buffers and Files
-    { "<leader>fb", ":FzfLua buffers<CR>", desc = "Buffers", silent = true },
-    { "<leader>ff", ":FzfLua files<CR>", desc = "Find files", silent = true },
-    { "<leader>fo", ":FzfLua oldfiles<CR>", desc = "Old files", silent = true },
-
-    -- Search
-    { "<leader>fw", ":FzfLua grep_cword<CR>", desc = "Grep", silent = true },
-    { "<leader>fg", ":FzfLua live_grep<CR>", desc = "Live grep", silent = true },
-
-    -- Git
-    { "<leader>gf", ":FzfLua git_files<CR>", desc = "Git files", silent = true },
-    { "<leader>gs", ":FzfLua git_status<CR>", desc = "Git status", silent = true },
-
-    -- LSP / Diagnostics
-    { "<leader>ca", ":FzfLua lsp_code_actions<CR>", desc = "Code actions", silent = true },
-
-    -- Misc
-    { "<leader>fr", ":FzfLua resume<CR>", desc = "Resume", silent = true },
-    { "<leader>fz", ":FzfLua builtin<CR>", desc = "Builtin", silent = true },
-    { "<leader>fh", ":FzfLua helptags<CR>", desc = "Help tags", silent = true },
-    { "<leader>km", ":FzfLua keymaps<CR>", desc = "Keymaps", silent = true },
-    { "<leader>ch", ":FzfLua colorschemes<CR>", desc = "Colorschemes", silent = true },
-    { "<leader>sg", ":FzfLua spell_suggest<CR>", desc = "Spell suggest", silent = true },
-
-    -- Custom live grep with priority files
-    {
-      "<leader>fi",
-      function()
-        require("fzf-lua").live_grep({
-          search_paths = get_priority_files(),
-          rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
-        })
-      end,
-      desc = "Live grep priority files",
-      silent = true,
-    },
-  },
-  config = function(_, opts)
+  opts = function()
     local actions = require("fzf-lua").actions
 
-    opts.colorschemes = opts.colorschemes or {}
-    opts.colorschemes.actions = {
-      ["enter"] = theme.set_global_colorscheme,
-    }
+    ---@type fzf-lua.Config
+    local opts = {
+      -- Setup
+      ui_select = {},
 
-    opts.actions = {
+      -- Global options
+      profile = "hide", -- Enable hide profile for better resume functionality
+      winopts = {
+        preview = {
+          layout = "vertical",
+        },
+      },
+      keymap = {
+        builtin = {
+          ["<M-Esc>"] = "hide",
+          ["<F1>"] = "toggle-help",
+          ["<F2>"] = "toggle-fullscreen",
+
+          -- Only valid with the 'builtin' previewer
+          ["<F3>"] = "toggle-preview-wrap",
+          ["<F4>"] = "toggle-preview",
+
+          -- Rotate preview clockwise/counter-clockwise
+          ["<F5>"] = "toggle-preview-ccw",
+          ["<F6>"] = "toggle-preview-cw",
+
+          -- Preview page up/down
+          ["<M-j>"] = "preview-page-down",
+          ["<M-k>"] = "preview-page-up",
+          ["<M-n>"] = "preview-down",
+          ["<M-p>"] = "preview-up",
+        },
+        fzf = {
+          ["alt-g"] = "first",
+          ["alt-b"] = "last",
+        },
+      },
+      actions = {
+        files = {
+          ["enter"] = actions.file_edit_or_qf,
+          ["ctrl-y"] = actions.file_edit_or_qf,
+          ["alt-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
+        },
+      },
+
+      -- Pickers
       files = {
-        ["enter"] = actions.file_edit_or_qf,
-        ["alt-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
+        fd_opts = "--type f " .. fd_excludes,
+      },
+      colorschemes = {
+        actions = {
+          ["enter"] = theme.set_global_colorscheme,
+        },
+      },
+      git = {
+        files = {
+          cmd = "git ls-files --cached --others --exclude-standard",
+        },
       },
     }
-    require("fzf-lua").setup(opts)
-    require("fzf-lua").register_ui_select()
+
+    return opts
   end,
+
+  keys = {
+    -- Buffers and Files
+    { "<leader>fb", "<cmd>FzfLua buffers<CR>", desc = "Fzf: Buffers" },
+    { "<leader>ff", "<cmd>FzfLua files<CR>", desc = "Fzf: Find files" },
+    { "<leader>fo", "<cmd>FzfLua oldfiles<CR>", desc = "Fzf: Old files" },
+    {
+      "<leader>fd",
+      function()
+        require("fzf-lua").files({
+          previewer = false,
+          file_icons = false,
+          fd_opts = "--type d " .. fd_excludes,
+          actions = {
+            ["enter"] = function(selected)
+              require("oil").open(selected[1])
+            end,
+          },
+        })
+      end,
+      desc = "Fzf: Find directories",
+    },
+
+    -- Search
+    {
+      "<leader>fw",
+      function()
+        require("fzf-lua").grep_visual()
+      end,
+      mode = "x",
+      desc = "Fzf: Grep visual selection",
+    },
+    {
+      "<leader>fw",
+      function()
+        require("fzf-lua").grep_cword()
+      end,
+      mode = "n",
+      desc = "Fzf: Grep current word",
+    },
+    {
+      "<leader>fg",
+      function()
+        require("fzf-lua").live_grep({
+          rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 "
+            .. rg_excludes
+            .. " -e",
+          rg_glob = true,
+        })
+      end,
+      desc = "Fzf: Live grep",
+    },
+    {
+      "<leader>fG",
+      function()
+        require("fzf-lua").live_grep({
+          hidden = true,
+          follow = true,
+          no_ignore = false,
+        })
+      end,
+      desc = "Fzf: Live grep (git)",
+    },
+
+    -- Git
+    { "<leader>gf", "<cmd>FzfLua git_files<CR>", desc = "Fzf: Git files" },
+    { "<leader>gs", "<cmd>FzfLua git_status<CR>", desc = "Fzf: Git status" },
+
+    -- Misc
+    { "<leader>fr", "<cmd>FzfLua resume<CR>", desc = "Fzf: Resume" },
+    { "<leader>fz", "<cmd>FzfLua builtin<CR>", desc = "Fzf: Builtin commands" },
+    { "<leader>fh", "<cmd>FzfLua helptags<CR>", desc = "Fzf: Help tags" },
+    { "<leader>fM", "<cmd>FzfLua man_pages<CR>", desc = "Fzf: Man pages" },
+    { "<leader>ch", "<cmd>FzfLua colorschemes<CR>", desc = "Fzf: Colorschemes" },
+    { "<leader>fH", "<cmd>FzfLua highlights<CR>", desc = "Fzf: Highlight groups" },
+    { "<leader>:", "<cmd>FzfLua command_history<CR>", desc = "Fzf: Command history" },
+    { "<leader>km", "<cmd>FzfLua keymaps<CR>", desc = "Fzf: Keymaps" },
+    { "<leader>sc", "<cmd>FzfLua spellcheck<CR>", desc = "Fzf: Misspelled words in buffer" },
+    { "<leader>sg", "<cmd>FzfLua spell_suggest<CR>", desc = "Fzf: Spelling suggestions" },
+  },
 }

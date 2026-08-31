@@ -14,7 +14,6 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
   spec = {
-    { import = "plugins" },
     { import = "plugins.editor" },
     { import = "plugins.git" },
     { import = "plugins.lsp" },

@@ -5,15 +5,12 @@ return {
   init = function()
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
-      pattern = {
-        "*.lua",
-        "*.json",
-        "*.jsonc",
-        "*.yaml",
-        "*.html",
-        "*.css",
-      },
       callback = function(args)
+        if vim.b[args.buf].skip_format then
+          vim.b[args.buf].skip_format = false
+          return
+        end
+
         require("conform").format({
           bufnr = args.buf,
           async = false, -- block saving until formatting is done
@@ -26,20 +23,30 @@ return {
   ---@type conform.setupOpts
   opts = {
     formatters_by_ft = {
+      sh = { "shfmt" },
+      bash = { "shfmt" },
+      zsh = { "shfmt" },
+
       lua = { "stylua" },
+
+      python = { "ruff_format", "ruff_organize_imports" },
+
       javascript = { "prettier" },
       javascriptreact = { "prettier" },
       typescript = { "prettier" },
       typescriptreact = { "prettier" },
+
       html = { "prettier" },
       css = { "prettier" },
+
       json = { "prettier" },
       jsonc = { "prettier" },
       yaml = { "prettier" },
     },
+
     formatters = {
-      stylua = {
-        command = vim.fn.stdpath("data") .. "/mason/bin/stylua",
+      shfmt = {
+        prepend_args = { "-i", "2", "-bn", "-ci", "-sr" },
       },
       prettier = {
         condition = function(_, ctx)
@@ -67,7 +74,7 @@ return {
     {
       "<leader>fs",
       function()
-        vim.b.skip_next_format = true
+        vim.b.skip_format = true
         vim.cmd.write()
       end,
       desc = "Conform: Save buffer without formatting",

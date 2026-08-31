@@ -20,7 +20,7 @@ return {
     {
       "<leader>u",
       "<cmd>Atone toggle<CR>",
-      desc = "Toggle Untotree (Atone)",
+      desc = "Atone: Toggle Untotree",
     },
   },
 }

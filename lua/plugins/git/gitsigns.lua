@@ -1,60 +1,80 @@
 return {
   "lewis6991/gitsigns.nvim",
-  config = function()
-    local gitsigns = require("gitsigns")
-    gitsigns.setup({
-      preview_config = {
-        border = "rounded",
-      },
 
-      on_attach = function(bufnr)
-        local function map(mode, l, r, opts)
-          opts = opts or {}
-          opts.buffer = bufnr
-          vim.keymap.set(mode, l, r, opts)
+  ---@module "gitsigns"
+  ---@type Gitsigns.config
+  opts = {
+    signs = {
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
+      changedelete = { text = "▎" },
+      untracked = { text = "▎" },
+    },
+    signs_staged = {
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
+      changedelete = { text = "▎" },
+    },
+    preview_config = {
+      border = "rounded",
+    },
+
+    on_attach = function(bufnr)
+      local gitsigns = require("gitsigns")
+
+      local function map(mode, l, r, desc)
+        vim.keymap.set(mode, l, r, { buf = bufnr, desc = desc, silent = true })
+      end
+
+      -- Navigation
+      map("n", "]c", function()
+        if vim.wo.diff then
+          vim.cmd.normal({ "]c", bang = true })
+        else
+          gitsigns.nav_hunk("next")
         end
+      end, "Gitsigns: Next Hunk")
+      map("n", "[c", function()
+        if vim.wo.diff then
+          vim.cmd.normal({ "[c", bang = true })
+        else
+          gitsigns.nav_hunk("prev")
+        end
+      end, "Gitsigns: Previous Hunk")
 
-        -- Navigation
-        map("n", "]c", function()
-          if vim.wo.diff then
-            vim.cmd.normal({ "]c", bang = true })
-          else
-            gitsigns.nav_hunk("next")
-          end
-        end)
+      map("n", "]C", function()
+        gitsigns.nav_hunk("first")
+      end, "Gitsigns: First Hunk")
+      map("n", "[C", function()
+        gitsigns.nav_hunk("last")
+      end, "Gitsigns: Last Hunk")
 
-        map("n", "[c", function()
-          if vim.wo.diff then
-            vim.cmd.normal({ "[c", bang = true })
-          else
-            gitsigns.nav_hunk("prev")
-          end
-        end)
+      -- Actions
+      map("n", "<leader>hs", gitsigns.stage_hunk, "Gitsigns: Stage Hunk")
+      map("x", "<leader>hs", function()
+        gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+      end, "Gitsigns: Stage Hunk")
 
-        -- Actions
-        map("n", "<leader>hs", gitsigns.stage_hunk)
-        map("n", "<leader>hr", gitsigns.reset_hunk)
+      map("n", "<leader>hr", gitsigns.reset_hunk, "Gitsigns: Reset Hunk")
+      map("x", "<leader>hr", function()
+        gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+      end, "Gitsigns: Reset Hunk")
 
-        map("v", "<leader>hs", function()
-          gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-        end)
+      map("n", "<leader>hp", gitsigns.preview_hunk, "Gitsigns: Preview Hunk")
+      map("n", "<leader>hi", gitsigns.preview_hunk_inline, "Gitsigns: Preview Hunk Inline")
 
-        map("v", "<leader>hr", function()
-          gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-        end)
+      map("n", "<leader>hb", function()
+        gitsigns.blame_line({ full = true })
+      end, "Gitsigns: Blame Line")
 
-        map("n", "<leader>hp", gitsigns.preview_hunk)
-        map("n", "<leader>hi", gitsigns.preview_hunk_inline)
-
-        map("n", "<leader>hb", function()
-          gitsigns.blame_line({ full = true })
-        end)
-
-        -- Toggles
-        map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
-        map("n", "<leader>tr", gitsigns.toggle_deleted)
-        map("n", "<leader>tw", gitsigns.toggle_word_diff)
-      end,
-    })
-  end,
+      map("n", "<leader>hd", gitsigns.diffthis, "Gitsigns: Diff This")
+      map("n", "<leader>hD", function()
+        gitsigns.diffthis("~")
+      end, "Gitsigns: Diff This ~")
+    end,
+  },
 }

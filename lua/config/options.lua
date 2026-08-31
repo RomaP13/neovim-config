@@ -1,20 +1,18 @@
 vim.g.mapleader = " "
 
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
-vim.cmd("set shiftwidth=2")
-
--- vim.cmd("set clipboard+=unnamedplus")
+vim.o.expandtab = true
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
 
 vim.opt.mouse = "a"
--- Make line numbers default
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.breakindent = true
 vim.opt.undofile = true
 
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
+-- Searches ignore case
 vim.opt.ignorecase = true
+-- If search contains uppercase, search becomes case-sensitive
 vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
@@ -34,22 +32,20 @@ vim.opt.splitbelow = true
 vim.opt.scrolloff = 20
 
 -- Highlight the text line of the cursor
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Enable 24-bit color
 vim.opt.termguicolors = true
 
 vim.g.have_nerd_font = true
 
--- disable netrw at the very start of your init.lua
+-- Use Oil for file explorer
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Window layout for undotree
-vim.g.undotree_WindowLayout = 4
-
-vim.g.foldmethod = "manual"
-vim.g.foldcolumn = 1
-
 vim.opt.conceallevel = 0
 vim.opt.backupcopy = "yes"
+
+vim.opt.winborder = "rounded"
+
+vim.o.termsync = false
