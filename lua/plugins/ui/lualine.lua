@@ -1,4 +1,8 @@
 local function show_neocodeium_status()
+  if not package.loaded["neocodeium"] then
+    return "󱚧"
+  end
+
   local neocodeium = require("neocodeium")
   if neocodeium.get_status() == 0 then
     return "󰚩"
